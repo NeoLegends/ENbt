@@ -1,0 +1,47 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ENbt
+{
+    [TagHandlerFor(TagType.Date)]
+    public class DateTag : ValueTag<DateTime>, IEquatable<DateTag>
+    {
+        public DateTag() : base(TagType.Date) { }
+
+        public DateTag(ENBtBinaryReader reader)
+            : this(reader.ReadInt64())
+        {
+            Contract.Requires<ArgumentNullException>(reader != null);
+        }
+
+        public DateTag(long unixTimeMs) : this(unixTimeMs.FromUnixTimeMilliseconds()) { }
+
+        public DateTag(DateTime value) : base(TagType.Date, value) { }
+
+        public override bool Equals(Tag other)
+        {
+            DateTag tag = other as DateTag;
+            return (tag != null) && this.Equals(tag);
+        }
+
+        public bool Equals(DateTag other)
+        {
+            if (ReferenceEquals(other, this))
+                return true;
+            if (ReferenceEquals(other, null))
+                return false;
+
+            return (this.Value == other.Value);
+        }
+
+        protected override void WritePayloadTo(ENbtBinaryWriter writer)
+        {
+            writer.Write(this.Value.ToUnixTimeMilliseconds());
+        }
+    }
+}

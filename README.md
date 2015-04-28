@@ -1,2 +1,2 @@
 # ENbt
-A binary cerealization format loosely based on Minecraft's NBT.
+A structured binary format loosely based on Minecraft's NBT.

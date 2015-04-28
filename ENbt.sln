@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ENbt", "ENbt\ENbt.csproj", "{A90DE563-3124-4F91-8052-DC6A71D0C6A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3017B8C0-EB0B-46A7-A194-0C14498ED2EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ENbt.Tests", "Tests\ENbt.Tests\ENbt.Tests.csproj", "{6C9E7169-91CD-4133-8F28-E56C0C866967}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A90DE563-3124-4F91-8052-DC6A71D0C6A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A90DE563-3124-4F91-8052-DC6A71D0C6A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A90DE563-3124-4F91-8052-DC6A71D0C6A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A90DE563-3124-4F91-8052-DC6A71D0C6A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C9E7169-91CD-4133-8F28-E56C0C866967}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C9E7169-91CD-4133-8F28-E56C0C866967}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C9E7169-91CD-4133-8F28-E56C0C866967}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C9E7169-91CD-4133-8F28-E56C0C866967}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6C9E7169-91CD-4133-8F28-E56C0C866967} = {3017B8C0-EB0B-46A7-A194-0C14498ED2EF}
+	EndGlobalSection
+EndGlobal
