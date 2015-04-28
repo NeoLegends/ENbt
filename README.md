@@ -1,15 +1,13 @@
 # ENbt
 A structured binary format loosely based on Minecraft's NBT.
 
-## Differences to Minecraft NBT
-1. In contrast to Minecraft NBT, ENbt (to which it is not binary-compatible) does not store the name
-   within a tag. Instead, names of the items will be stored by the parent which contains the Tag.
-   This simplifies the structure of the document tree, as there is no more decision to make in whether
-   a Tag's name shall be written out or not. Objects simply write the name of the child to the output,
-   lists don't. It also allows for greater flexibility, since you can associate the same value to 
-   different keys without mutating the value itself.
-2. ENbt does not require the tree root to be an object. You can use lists, objects, integers, floating 
-   point numbers, dates, time ranges, vectors, or whatever object you desire as root. No restrictions!
+## Using ENbt
+Using ENbt is simple. New tags can be created by `new`ing them, tags can be saved by calling `WriteTo`.
+Loading tags from `Stream`s is possible via `Tag.ReadFrom<T>`. There is no support for `async / await`
+since `BinaryReader / -Writer` does not include support for it as well. The same reasons why they don't 
+supply support also apply for ENbt (lots of small operations -> bad for `async / await`). I suggest 
+writing to a temporary `MemoryStream` which you copy to your actual `Stream` via `CopyToAsync`, if you
+wanna stay async.
 
 ## ENbt Specification
 
@@ -96,3 +94,13 @@ written. The structure of a `List` looks like this:
      Tag Type List  <List Length> [ <Tag Type>  <Payload> ]
     |   1 byte    ||   4 bytes   |[|  1 byte  || n bytes |]
                                   [    <Length> times     ]
+
+## Differences to Minecraft NBT
+1. In contrast to Minecraft NBT, ENbt (to which it is not binary-compatible) does not store the name
+   within a tag. Instead, names of the items will be stored by the parent which contains the Tag.
+   This simplifies the structure of the document tree, as there is no more decision to make in whether
+   a Tag's name shall be written out or not. Objects simply write the name of the child to the output,
+   lists don't. It also allows for greater flexibility, since you can associate the same value to 
+   different keys without mutating the value itself.
+2. ENbt does not require the tree root to be an object. You can use lists, objects, integers, floating 
+   point numbers, dates, time ranges, vectors, or whatever object you desire as root. No restrictions!
