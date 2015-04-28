@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ENbt
 {
     [TagHandlerFor(TagType.Int64)]
-    public class Int64Tag : ValueTag<Int64>, IEquatable<Int64Tag>
+    public class Int64Tag : ValueTag<Int64>, IComparable<Int64Tag>, IEquatable<Int64Tag>
     {
         public Int64Tag() : base(TagType.Int64) { }
 
@@ -18,7 +18,16 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public Int64Tag(Int64 value) : base(TagType.Int64,  value) { }
+        public Int64Tag(Int64 value) : base(TagType.Int64, value) { }
+
+        public int CompareTo(Int64Tag other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+            return this.Value.CompareTo(other.Value);
+        }
 
         public override bool Equals(Tag other)
         {
@@ -44,7 +53,7 @@ namespace ENbt
 
     [CLSCompliant(false)]
     [TagHandlerFor(TagType.UInt64)]
-    public class UInt64Tag : ValueTag<UInt64>, IEquatable<UInt64Tag>
+    public class UInt64Tag : ValueTag<UInt64>, IComparable<UInt64Tag>, IEquatable<UInt64Tag>
     {
         public UInt64Tag() : base(TagType.UInt64) { }
 
@@ -55,6 +64,15 @@ namespace ENbt
         }
 
         public UInt64Tag(UInt64 value) : base(TagType.UInt64, value) { }
+
+        public int CompareTo(UInt64Tag other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+            return this.Value.CompareTo(other.Value);
+        }
 
         public override bool Equals(Tag other)
         {

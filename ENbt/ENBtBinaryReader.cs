@@ -101,6 +101,7 @@ namespace ENbt
 
         public int Read(byte[] buffer, int offset, int count)
         {
+            Contract.Requires<ArgumentNullException>(buffer != null);
             Contract.Requires<ArgumentOutOfRangeException>((offset + count) <= buffer.Length);
 
             return this.reader.Read(buffer, offset, count);
@@ -108,7 +109,13 @@ namespace ENbt
 
         public string ReadString()
         {
-            byte[] buffer = new byte[this.ReadInt32()];
+            int length = this.ReadInt32();
+            if (length < 0)
+            {
+                throw new InvalidOperationException(string.Format("Negative string length ({0}) given!", length));
+            }
+
+            byte[] buffer = new byte[length];
             int bytesRead = this.Read(buffer, 0, buffer.Length);
             if (bytesRead < buffer.Length)
             {

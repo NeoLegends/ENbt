@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ENbt
 {
     [TagHandlerFor(TagType.Single)]
-    public class SingleTag : ValueTag<Single>, IEquatable<SingleTag>
+    public class SingleTag : ValueTag<Single>, IComparable<SingleTag>, IEquatable<SingleTag>
     {
         public SingleTag() : base(TagType.Single) { }
 
@@ -19,6 +19,15 @@ namespace ENbt
         }
 
         public SingleTag(Single value) : base(TagType.Single, value) { }
+
+        public int CompareTo(SingleTag other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+            return this.Value.CompareTo(other.Value);
+        }
 
         public override bool Equals(Tag other)
         {
@@ -43,7 +52,7 @@ namespace ENbt
     }
 
     [TagHandlerFor(TagType.Double)]
-    public class DoubleTag : ValueTag<Double>, IEquatable<DoubleTag>
+    public class DoubleTag : ValueTag<Double>, IComparable<DoubleTag>, IEquatable<DoubleTag>
     {
         public DoubleTag() : base(TagType.Double) { }
 
@@ -54,6 +63,15 @@ namespace ENbt
         }
 
         public DoubleTag(Double value) : base(TagType.Double, value) { }
+
+        public int CompareTo(DoubleTag other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+            return this.Value.CompareTo(other.Value);
+        }
 
         public override bool Equals(Tag other)
         {

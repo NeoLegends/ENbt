@@ -90,7 +90,6 @@ namespace ENbt
                 if (stringTag != null)
                 {
                     this.children.Add(stringTag, Tag.ReadFrom(reader));
-                    break;
                 }
             }
         }
@@ -147,6 +146,11 @@ namespace ENbt
         void ICollection<KeyValuePair<StringTag, Tag>>.CopyTo(KeyValuePair<StringTag, Tag>[] array, int arrayIndex)
         {
             ((ICollection<KeyValuePair<StringTag, Tag>>)this.children).CopyTo(array, arrayIndex);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as ObjectTag);
         }
 
         public override bool Equals(Tag other)
@@ -211,6 +215,21 @@ namespace ENbt
         private void ObjectInvariant()
         {
             Contract.Invariant(this.children != null);
+        }
+
+        public static bool operator ==(ObjectTag left, ObjectTag right)
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+                return false;
+
+            return left.Equals(right);
+        }
+        
+        public static bool operator !=(ObjectTag left, ObjectTag right)
+        {
+            return !(left == null);
         }
     }
 }

@@ -12,6 +12,15 @@ namespace ENbt
     [TagHandlerFor(TagType.ByteArray)]
     public class ByteArrayTag : ValueTag<byte[]>, IEquatable<ByteArrayTag>
     {
+        public int Length
+        {
+            get
+            {
+                byte[] value = this.Value;
+                return (value != null) ? value.Length : 0;
+            }
+        }
+
         public ByteArrayTag() : base(TagType.ByteArray) { }
 
         public ByteArrayTag(byte[] value) : base(TagType.ByteArray, value) { }
@@ -21,7 +30,12 @@ namespace ENbt
         {
             Contract.Requires<ArgumentNullException>(reader != null);
 
-            this.Value = new byte[reader.ReadInt32()];
+            int length = reader.ReadInt32();
+            if (length < 0)
+            {
+                throw new InvalidOperationException(string.Format("Negative array length ({0}) given!", length));
+            }
+            this.Value = new byte[length];
             if (reader.Read(this.Value, 0, this.Value.Length) < this.Value.Length)
             {
                 throw new EndOfStreamException(string.Format("The specified amount of bytes ({0}) could not be read.", this.Value.Length));
@@ -41,7 +55,7 @@ namespace ENbt
             if (ReferenceEquals(other, null))
                 return false;
 
-            return ReferenceEquals(this.Value, other.Value) || ((this.Value != null && other.Value != null) && this.Value.SequenceEqual(other.Value));
+            return ReferenceEquals(this.Value, other.Value) || this.Value.SequenceEqual(other.Value);
         }
 
         public override int GetHashCode()

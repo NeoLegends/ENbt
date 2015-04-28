@@ -103,6 +103,11 @@ namespace ENbt
             this.children.CopyTo(array, arrayIndex);
         }
 
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as ListTag);
+        }
+
         public override bool Equals(Tag other)
         {
             return (other != null) && this.Equals(other as ListTag);

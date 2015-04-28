@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ENbt
 {
-    public delegate Tag TagInitializationDelegate(ENBtBinaryReader reader);
+    internal delegate Tag TagInitializationDelegate(ENBtBinaryReader reader);
 
     internal class TagResolver
     {
@@ -87,6 +87,12 @@ namespace ENbt
                     break;
                 case TagType.String:
                     initializer = rdr => new StringTag(rdr);
+                    break;
+                case TagType.Date:
+                    initializer = rdr => new DateTag(rdr);
+                    break;
+                case TagType.TimeSpan:
+                    initializer = rdr => new TimeSpanTag(rdr);
                     break;
                 case TagType.ByteArray:
                     initializer = rdr => new ByteArrayTag(rdr);

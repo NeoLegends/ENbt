@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ENbt
 {
     [TagHandlerFor(TagType.Date)]
-    public class DateTag : ValueTag<DateTime>, IEquatable<DateTag>
+    public class DateTag : ValueTag<DateTime>, IComparable<DateTag>, IEquatable<DateTag>
     {
         public DateTag() : base(TagType.Date) { }
 
@@ -22,6 +22,15 @@ namespace ENbt
         public DateTag(long unixTimeMs) : this(unixTimeMs.FromUnixTimeMilliseconds()) { }
 
         public DateTag(DateTime value) : base(TagType.Date, value) { }
+
+        public int CompareTo(DateTag other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+            return this.Value.CompareTo(other.Value);
+        }
 
         public override bool Equals(Tag other)
         {

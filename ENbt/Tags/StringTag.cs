@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ENbt
 {
     [TagHandlerFor(TagType.String)]
-    public class StringTag : ValueTag<string>, IEquatable<StringTag>
+    public class StringTag : ValueTag<string>, IComparable<StringTag>, IEquatable<StringTag>
     {
         private static readonly StringTag _Empty = new StringTag(string.Empty);
 
@@ -37,6 +37,15 @@ namespace ENbt
         }
 
         public StringTag(string value) : base(TagType.String, value) { }
+
+        public int CompareTo(StringTag other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+            return this.Value.CompareTo(other.Value);
+        }
 
         public override bool Equals(Tag other)
         {

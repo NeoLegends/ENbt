@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("ENbt")]
-[assembly: AssemblyDescription("Fast and efficient binary cerealization format loosely based on Minecraft's NBT.")]
+[assembly: AssemblyDescription("A structured binary format loosely based on Minecraft's NBT.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Moritz Gunz")]
 [assembly: AssemblyProduct("Extended Named Binary Tag")]

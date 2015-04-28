@@ -24,25 +24,55 @@ namespace ENbt.Tests
             using (FileStream fs = File.Create(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "List.nbt")))
             {
                 list.WriteTo(ms);
-                ms.Position = 0;
 
+                ms.Position = 0;
                 Stopwatch st = Stopwatch.StartNew();
                 list.WriteTo(ms);
                 TimeSpan elapsed = st.Elapsed;
-                ms.Position = 0;
 
+                ms.Position = 0;
                 await ms.CopyToAsync(fs);
 
                 Console.WriteLine("Finished serialization in {0}ms.", elapsed.TotalMilliseconds);
 
                 ms.Position = 0;
                 ListTag deserializedList = Tag.ReadFrom<ListTag>(ms); // Read two times to prevent initialization of static methods obscuring the results
+                
                 ms.Position = 0;
-
                 st.Restart();
                 deserializedList = Tag.ReadFrom<ListTag>(ms);
                 Console.WriteLine(string.Format("Finished deserialization in {0}ms.", st.Elapsed.TotalMilliseconds));
                 Console.WriteLine("Deserialized list! It is " + ((deserializedList == list) ? "equal " : "not equal ") + "to the deserialized one.");
+            }
+        }
+
+        [TestMethod]
+        public async Task TestObjectSpeed()
+        {
+            ObjectTag objectTag = GenerateTag();
+
+            using (MemoryStream ms = new MemoryStream())
+            using (FileStream fs = File.Create(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Object.nbt")))
+            {
+                objectTag.WriteTo(ms);
+
+                ms.Position = 0;
+                Stopwatch st = Stopwatch.StartNew();
+                objectTag.WriteTo(ms);
+                TimeSpan elapsed = st.Elapsed;
+
+                ms.Position = 0;
+                await ms.CopyToAsync(fs);
+
+                Console.WriteLine("Finished serialization in {0}ms.", elapsed.TotalMilliseconds);
+
+                ms.Position = 0;
+                ObjectTag deserializedList = Tag.ReadFrom<ObjectTag>(ms); // Read two times to prevent initialization of static methods obscuring the results
+                
+                ms.Position = 0;
+                st.Restart();
+                deserializedList = Tag.ReadFrom<ObjectTag>(ms);
+                Console.WriteLine(string.Format("Finished deserialization in {0}ms.", st.Elapsed.TotalMilliseconds));
             }
         }
 
@@ -69,19 +99,26 @@ namespace ENbt.Tests
             }
         }
 
-        private static Tag GenerateTag()
+        private static ObjectTag GenerateTag()
         {
-            return new ListTag(
-                new ByteTag(125),
-                new DateTag(DateTime.Now),
-                new StringTag("Hello, World!"),
-                new ObjectTag(
-                    new Dictionary<string, Tag>() {  
-                        { "TestString", new StringTag("Test string!") },
-                        { "TestInt", new Int32Tag(150) }
+            byte[] arr = new byte[1024 * 4];
+            new Random().NextBytes(arr);
+
+            return new ObjectTag() 
+            {
+                { "TestByte", new ByteTag(125) },
+                { "TestDate", new DateTag(DateTime.Now) },
+                { "TestString1", new StringTag("Hello, World!") },
+                { 
+                    "TestObject", 
+                    new ObjectTag() 
+                    {  
+                        { "TestString2", new StringTag("Test string!") },
+                        { "TestInt", new Int32Tag(150) },
+                        { "TestByteArray", new ByteArrayTag(arr) }
                     }
-                )
-            );
+                }
+            };
         }
     }
 }

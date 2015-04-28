@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ENbt
 {
     [TagHandlerFor(TagType.TimeSpan)]
-    public class TimeSpanTag : ValueTag<TimeSpan>, IEquatable<TimeSpanTag>
+    public class TimeSpanTag : ValueTag<TimeSpan>, IComparable<TimeSpanTag>, IEquatable<TimeSpanTag>
     {
         public TimeSpanTag() : base(TagType.TimeSpan) { }
 
@@ -21,6 +21,16 @@ namespace ENbt
         public TimeSpanTag(long ticks) : this(TimeSpan.FromTicks(ticks)) { }
 
         public TimeSpanTag(TimeSpan value) : base(TagType.TimeSpan, value) { }
+
+        public int CompareTo(TimeSpanTag other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+
+            return this.Value.CompareTo(other.Value);
+        }
 
         public override bool Equals(Tag other)
         {

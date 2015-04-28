@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -31,6 +32,8 @@ namespace ENbt
         protected TagUnknownException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
+            Contract.Requires<ArgumentNullException>(info != null);
+
             this.Type = (TagType)info.GetByte("TagType");
         }
 

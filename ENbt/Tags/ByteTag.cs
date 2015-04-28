@@ -10,7 +10,7 @@ namespace ENbt
 {
     [CLSCompliant(false)]
     [TagHandlerFor(TagType.SByte)]
-    public class SByteTag : ValueTag<sbyte>, IEquatable<SByteTag>
+    public class SByteTag : ValueTag<sbyte>, IComparable<SByteTag>, IEquatable<SByteTag>
     {
         public SByteTag() : base(TagType.SByte) { }
 
@@ -21,6 +21,15 @@ namespace ENbt
         }
 
         public SByteTag(sbyte value) : base(TagType.SByte, value) { }
+
+        public int CompareTo(SByteTag other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+            return this.Value.CompareTo(other.Value);
+        }
 
         public override bool Equals(Tag other)
         {
@@ -45,7 +54,7 @@ namespace ENbt
     }
 
     [TagHandlerFor(TagType.Byte)]
-    public class ByteTag : ValueTag<byte>, IEquatable<ByteTag>
+    public class ByteTag : ValueTag<byte>, IComparable<ByteTag>, IEquatable<ByteTag>
     {
         public ByteTag() : base(TagType.Byte) { }
 
@@ -55,7 +64,16 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public ByteTag(byte value) : base(TagType.Byte,  value) { }
+        public ByteTag(byte value) : base(TagType.Byte, value) { }
+
+        public int CompareTo(ByteTag other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+            return this.Value.CompareTo(other.Value);
+        }
 
         public override bool Equals(Tag other)
         {
