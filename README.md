@@ -36,35 +36,36 @@ for data of the specified type.
 
 The following tags are pre-defined in ENbt:
 
-- `End = 0`, End marker of object
-- `Object = 1`, A tag containing other tags by name
+- `End = 0`, End marker of object.
+- `Object = 1`, A tag containing other tags by name. Items may have different types.
 - `List = 2`, A tag containing other tags by index. Items may have different types.
-- `SByte = 3`, A signed 8-bit integer
-- `Byte = 4`, An unsigned 8-bit integer
-- `Int16 = 5`, A signed 16-bit integer
-- `UInt16 = 6`, An unsigned 16-bit integer
-- `Int32 = 7`, A signed 32-bit integer
-- `UInt32 = 8`, An unsigned 32-bit integer
-- `Int64 = 9`, A signed 64-bit integer
-- `UInt64 = 10`, An unsigned 64-bit integer
-- `Single = 11`, IEEE 754 32-bit floating point (single accuracy)
-- `Double = 12`, IEEE 754 64-bit floating point (double accuracy)
-- `String = 13`, 32-bit length prefixed, UTF-8 encoded string
-- `Date = 14`, Date and time store, internally stored as UNIX time in milliseconds (Int64)
-- `TimeSpan = 15`, Duration store, internally stored as ticks, which represent 100 nanoseconds each (Int64)
-- `ByteArray = 16`, A dedicated data type for an array of unsigned 8-bit integers, in order to reduce the overhead of List
-- `ByteVector2 = 17`, A two-component, 8-bit integer vector
-- `ByteVector3 = 18`, A three-component, 8-bit integer vector
-- `ByteVector4 = 19`, A four-component, 8-bit integer vector
-- `SingleVector2 = 20`, A two-component, single accuracy floating point vector
-- `SingleVector3 = 21`, A three-component, single accuracy floating point vector
-- `SingleVector4 = 22`, A four-component, single accuracy floating point vector
-- `DoubleVector2 = 23`, A two-component, double accuracy floating point vector
-- `DoubleVector3 = 24`, A three-component, double accuracy floating point vector
-- `DoubleVector4 = 25`, A four-component, double accuracy floating point vector
+- `SByte = 3`, A signed 8-bit integer.
+- `Byte = 4`, An unsigned 8-bit integer.
+- `Int16 = 5`, A signed 16-bit integer.
+- `UInt16 = 6`, An unsigned 16-bit integer.
+- `Int32 = 7`, A signed 32-bit integer.
+- `UInt32 = 8`, An unsigned 32-bit integer.
+- `Int64 = 9`, A signed 64-bit integer.
+- `UInt64 = 10`, An unsigned 64-bit integer.
+- `Single = 11`, IEEE 754 32-bit floating point (single accuracy).
+- `Double = 12`, IEEE 754 64-bit floating point (double accuracy).
+- `String = 13`, 32-bit length prefixed, UTF-8 encoded string.
+- `Date = 14`, Date and time store, internally stored as UNIX time in milliseconds (Int64).
+- `TimeSpan = 15`, Duration store, internally stored as ticks, which represent 100 nanoseconds each (Int64).
+- `ByteArray = 16`, A dedicated data type for a 32-bit length-prefixed array of unsigned 8-bit integers, in order to reduce the overhead of List for raw binary content.
+- `ByteVector2 = 17`, A two-component, 8-bit integer vector.
+- `ByteVector3 = 18`, A three-component, 8-bit integer vector.
+- `ByteVector4 = 19`, A four-component, 8-bit integer vector.
+- `SingleVector2 = 20`, A two-component, single accuracy floating point vector.
+- `SingleVector3 = 21`, A three-component, single accuracy floating point vector.
+- `SingleVector4 = 22`, A four-component, single accuracy floating point vector.
+- `DoubleVector2 = 23`, A two-component, double accuracy floating point vector.
+- `DoubleVector3 = 24`, A three-component, double accuracy floating point vector.
+- `DoubleVector4 = 25`, A four-component, double accuracy floating point vector.
 
 In most cases, the payload is just what you expect of a binary format. So in case of a four-component
-single accuracy vector, the payload consists of 128 bit data or four `Single`s (without delimeter) in order XYZW.
+single accuracy vector, the payload consists of 128 bit data or four `Single`s (without delimeter) in 
+order XYZW.
 
 ### Special Tags
 Special tags are `Object`, `End` and `List`, since they are essential for representing a tree-like data 
@@ -104,3 +105,5 @@ written. The structure of a `List` looks like this:
    different keys without mutating the value itself.
 2. ENbt does not require the tree root to be an object. You can use lists, objects, integers, floating 
    point numbers, dates, time ranges, vectors, or whatever object you desire as root. No restrictions!
+3. ENbt does not enforce a specific compression of the content. The format specification really only is
+   about the format itself and not about how it should be written to disk or transferred over the net.

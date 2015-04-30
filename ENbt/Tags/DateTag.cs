@@ -11,6 +11,14 @@ namespace ENbt
     [TagHandlerFor(TagType.Date)]
     public class DateTag : ValueTag<DateTime>, IComparable<DateTag>, IEquatable<DateTag>
     {
+        public override int PayloadLength
+        {
+            get
+            {
+                return sizeof(long);
+            }
+        }
+
         public DateTag() : base(TagType.Date) { }
 
         public DateTag(ENBtBinaryReader reader)

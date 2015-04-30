@@ -10,6 +10,14 @@ namespace ENbt
     [TagHandlerFor(TagType.TimeSpan)]
     public class TimeSpanTag : ValueTag<TimeSpan>, IComparable<TimeSpanTag>, IEquatable<TimeSpanTag>
     {
+        public override int PayloadLength
+        {
+            get
+            {
+                return sizeof(long);
+            }
+        }
+
         public TimeSpanTag() : base(TagType.TimeSpan) { }
 
         public TimeSpanTag(ENBtBinaryReader reader)

@@ -131,6 +131,7 @@
     <Compile Include="EndianBinaryWriter.cs" />
     <Compile Include="EndianBitConverter.cs" />
     <Compile Include="Endianness.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Hashing.cs" />
     <Compile Include="TagHandlerForAttribute.cs" />
     <Compile Include="TagResolver.cs" />

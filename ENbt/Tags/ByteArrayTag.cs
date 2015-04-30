@@ -10,10 +10,19 @@ using System.Threading.Tasks;
 namespace ENbt
 {
     [TagHandlerFor(TagType.ByteArray)]
-    public class ByteArrayTag : ValueTag<byte[]>, IEquatable<ByteArrayTag>
+    public class ByteArrayTag : ValueTag<byte[]>, IEquatable<ByteArrayTag>, IReadOnlyList<byte>
     {
-        public int Length
+        int IReadOnlyCollection<byte>.Count
         {
+            get
+            {
+                return this.Length;
+            }
+        }
+
+        public override int Length
+        {
+            [ContractVerification(false)]
             get
             {
                 byte[] value = this.Value;
@@ -21,9 +30,64 @@ namespace ENbt
             }
         }
 
+        public override int PayloadLength
+        {
+            get
+            {
+                return sizeof(int) + this.Length;
+            }
+        }
+
+        public override byte[] Value
+        {
+            get
+            {
+                return base.Value;
+            }
+            set
+            {
+                if ((value != null) && (value.LongLength > int.MaxValue))
+                {
+                    throw new OverflowException("Length of the array may only be int.MaxValue.");
+                }
+
+                base.Value = value;
+            }
+        }
+
+        public byte this[int index]
+        {
+            [ContractVerification(false)]
+            get
+            {
+                byte[] values = this.Value;
+                if (values == null)
+                {
+                    throw new ArgumentOutOfRangeException("The array has not been set, cannot access the desired element.");
+                }
+
+                return values[index];
+            }
+            [ContractVerification(false)]
+            set
+            {
+                byte[] values = this.Value;
+                if (values == null)
+                {
+                    throw new ArgumentOutOfRangeException("The array has not been set, cannot access the desired element.");
+                }
+
+                values[index] = value;
+            }
+        }
+
         public ByteArrayTag() : base(TagType.ByteArray) { }
 
-        public ByteArrayTag(byte[] value) : base(TagType.ByteArray, value) { }
+        public ByteArrayTag(byte[] value)
+            : base(TagType.ByteArray, value) 
+        {
+            Contract.Requires<OverflowException>(value == null || value.LongLength <= int.MaxValue);
+        }
 
         public ByteArrayTag(ENBtBinaryReader reader)
             : this()
@@ -36,16 +100,12 @@ namespace ENbt
                 throw new InvalidOperationException(string.Format("Negative array length ({0}) given!", length));
             }
             this.Value = new byte[length];
-            if (reader.Read(this.Value, 0, this.Value.Length) < this.Value.Length)
-            {
-                throw new EndOfStreamException(string.Format("The specified amount of bytes ({0}) could not be read.", this.Value.Length));
-            }
+            reader.ReadExactly(this.Value, 0, length);
         }
 
         public override bool Equals(Tag other)
         {
-            ByteArrayTag tag = other as ByteArrayTag;
-            return (tag != null) && this.Equals(tag);
+            return this.Equals(other as ByteArrayTag);
         }
 
         public bool Equals(ByteArrayTag other)
@@ -56,6 +116,17 @@ namespace ENbt
                 return false;
 
             return ReferenceEquals(this.Value, other.Value) || this.Value.SequenceEqual(other.Value);
+        }
+
+        [ContractVerification(false)]
+        public IEnumerator<byte> GetEnumerator()
+        {
+            return (this.Value ?? Enumerable.Empty<byte>()).GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
 
         public override int GetHashCode()

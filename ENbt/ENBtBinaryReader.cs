@@ -107,6 +107,16 @@ namespace ENbt
             return this.reader.Read(buffer, offset, count);
         }
 
+        public int ReadExactly(byte[] buffer, int offset, int count)
+        {
+            Contract.Requires<ArgumentNullException>(buffer != null);
+            Contract.Requires<ArgumentOutOfRangeException>(offset >= 0);
+            Contract.Requires<ArgumentOutOfRangeException>(count >= 0);
+            Contract.Requires<ArgumentOutOfRangeException>((offset + count) <= buffer.Length);
+
+            return this.source.ReadExactly(buffer, offset, count);
+        }
+
         public string ReadString()
         {
             int length = this.ReadInt32();
@@ -115,13 +125,8 @@ namespace ENbt
                 throw new InvalidOperationException(string.Format("Negative string length ({0}) given!", length));
             }
 
-            byte[] buffer = new byte[length];
-            int bytesRead = this.Read(buffer, 0, buffer.Length);
-            if (bytesRead < buffer.Length)
-            {
-                throw new EndOfStreamException("The end of the stream was reached before the string could be read entirely.");
-            }
-
+            byte[] buffer = new byte[length]; // Will be collected in Gen0
+            this.ReadExactly(buffer, 0, buffer.Length);
             return encoding.GetString(buffer);
         }
 

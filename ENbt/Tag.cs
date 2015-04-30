@@ -13,6 +13,142 @@ namespace ENbt
     {
         private static readonly TagResolver resolver = new TagResolver();
 
+        #region Conversion Properties
+
+        public byte AsByte
+        {
+            get
+            {
+                return this.As<byte>();
+            }
+        }
+
+        [CLSCompliant(false)]
+        public sbyte AsSByte
+        {
+            get
+            {
+                return this.As<sbyte>();
+            }
+        }
+
+        public short AsInt16
+        {
+            get
+            {
+                return this.As<short>();
+            }
+        }
+
+        [CLSCompliant(false)]
+        public ushort AsUInt16
+        {
+            get
+            {
+                return this.As<ushort>();
+            }
+        }
+
+        public int AsInt32
+        {
+            get
+            {
+                return this.As<int>();
+            }
+        }
+
+        [CLSCompliant(false)]
+        public uint AsUInt32
+        {
+            get
+            {
+                return this.As<uint>();
+            }
+        }
+
+        public long AsInt64
+        {
+            get
+            {
+                return this.As<long>();
+            }
+        }
+
+        [CLSCompliant(false)]
+        public ulong AsUInt64
+        {
+            get
+            {
+                return this.As<ulong>();
+            }
+        }
+
+        public float AsSingle
+        {
+            get
+            {
+                return this.As<float>();
+            }
+        }
+
+        public double AsDouble
+        {
+            get
+            {
+                return this.As<double>();
+            }
+        }
+
+        public string AsString
+        {
+            get
+            {
+                return this.As<string>();
+            }
+        }
+
+        public ObjectTag AsObject
+        {
+            get
+            {
+                return this.As<ObjectTag>();
+            }
+        }
+
+        public ListTag AsList
+        {
+            get
+            {
+                return this.As<ListTag>();
+            }
+        }
+
+        public DateTime AsDate
+        {
+            get
+            {
+                return this.As<DateTime>();
+            }
+        }
+
+        public TimeSpan AsTimeSpan
+        {
+            get
+            {
+                return this.As<TimeSpan>();
+            }
+        }
+
+        public byte[] AsByteArray
+        {
+            get
+            {
+                return this.As<byte[]>();
+            }
+        }
+
+        #endregion
+
         public virtual int Length
         {
             get
@@ -30,6 +166,11 @@ namespace ENbt
         protected Tag(TagType type)
         {
             this.Type = type;
+        }
+
+        public T As<T>()
+        {
+            return (T)(object)this;
         }
 
         public abstract bool Equals(Tag other);

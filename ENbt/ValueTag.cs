@@ -19,7 +19,7 @@ namespace ENbt
             }
         }
 
-        public T Value { get; set; }
+        public virtual T Value { get; set; }
 
         protected ValueTag(TagType type) : base(type) { }
 

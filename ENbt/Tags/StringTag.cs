@@ -24,7 +24,7 @@ namespace ENbt
         {
             get
             {
-                return Encoding.UTF8.GetByteCount(this.Value);
+                return sizeof(int) + Encoding.UTF8.GetByteCount(this.Value);
             }
         }
 
