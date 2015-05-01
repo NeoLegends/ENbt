@@ -46,7 +46,7 @@ namespace ENbt
             Contract.Requires<ArgumentException>(destination.CanWrite);
             Contract.Requires<ArgumentOutOfRangeException>(bufferSize > 0);
 
-            this.buffer = new byte[Math.Min(bufferSize, 32)];
+            this.buffer = new byte[Math.Max(bufferSize, 32)];
             this.destination = destination;
             this.maximumAllocatableCharacters = this.buffer.Length / 4;
             this.ownsDestinationStream = ownsDestination;
@@ -149,12 +149,12 @@ namespace ENbt
                 // Try very aggressively not to allocate new objects for performance reasons.
                 // First check if we can write the string into the buffer entirely, otherwise
                 // write chunk by chunk.
-                fixed (char* pChars = value)
+                fixed (char* pValue = value)
                 fixed (byte* pBuf = this.buffer)
                 {
                     if (totalByteCount <= this.buffer.Length)
                     {
-                        encoder.GetBytes(pChars, value.Length, pBuf, this.buffer.Length, true);
+                        encoder.GetBytes(pValue, value.Length, pBuf, this.buffer.Length, true);
                         this.writer.Write(this.buffer, 0, totalByteCount);
                     }
                     else
@@ -162,8 +162,9 @@ namespace ENbt
                         int charStart = 0;
                         do
                         {
-                            int charsToWrite = ((value.Length - charStart) <= maximumAllocatableCharacters) ? value.Length : maximumAllocatableCharacters;
-                            int bytesToWrite = encoder.GetBytes(pChars + charStart, charsToWrite, pBuf, this.buffer.Length, false);
+                            int charsLeft = value.Length - charStart;
+                            int charsToWrite = (charsLeft <= maximumAllocatableCharacters) ? charsLeft : maximumAllocatableCharacters;
+                            int bytesToWrite = encoder.GetBytes(pValue + charStart, charsToWrite, pBuf, this.buffer.Length, charsLeft == 0);
 
                             if (bytesToWrite > 0)
                             {
@@ -172,7 +173,6 @@ namespace ENbt
 
                             charStart += charsToWrite;
                         } while (charStart < value.Length);
-                        this.encoder.Reset();
                     }
                 }
             }

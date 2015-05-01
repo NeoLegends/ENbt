@@ -133,7 +133,7 @@ namespace ENbt
             this.children.Clear();
         }
 
-        public bool Contains(KeyValuePair<StringTag, Tag> item)
+        bool ICollection<KeyValuePair<StringTag, Tag>>.Contains(KeyValuePair<StringTag, Tag> item)
         {
             return this.children.Contains(item);
         }
@@ -155,7 +155,7 @@ namespace ENbt
 
         public override bool Equals(Tag other)
         {
-            return (other != null) && this.Equals(other as ObjectTag);
+            return this.Equals(other as ObjectTag);
         }
 
         public bool Equals(ObjectTag other)

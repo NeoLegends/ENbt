@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +13,27 @@ namespace ENbt
 
     internal class TagResolver
     {
+        private static readonly Type[] constructorFinderArray = new[] { typeof(ENBtBinaryReader) };
+
+        private static readonly Assembly entryAssembly = Assembly.GetEntryAssembly();
+
         private static readonly ConcurrentDictionary<TagType, TagInitializationDelegate> initializers = new ConcurrentDictionary<TagType, TagInitializationDelegate>();
+
+        private static readonly IEnumerable<Assembly> referencedAssemblies;
+
+        static TagResolver()
+        {
+            if (entryAssembly != null)
+            {
+                referencedAssemblies = entryAssembly.GetReferencedAssemblies()
+                                                    .Select(asmName => Assembly.Load(asmName))
+                                                    .ToList();
+            }
+            else
+            {
+                referencedAssemblies = Enumerable.Empty<Assembly>();
+            }
+        }
 
         public TagResolver() { }
 
@@ -30,14 +51,54 @@ namespace ENbt
 
         public bool TryResolve(TagType type, out TagInitializationDelegate initializer)
         {
+            Contract.Ensures(!Contract.Result<bool>() || Contract.ValueAtReturn(out initializer) != null);
+
             if (TryGetDefaultType(type, out initializer) || initializers.TryGetValue(type, out initializer))
             {
                 return true;
             }
             else
             {
-                return false; // Resolve using reflection in the future
+                // If there is no default resolver, try to get a resolver type from the entry assembly
+                IEnumerable<Type> tagHandlerTypes = entryAssembly.GetTypesByAttribute<TagHandlerForAttribute>(true, attr => attr.Type == type)
+                                                                 .Where(t => t.IsInterface && !t.IsAbstract);
+                if (TryFindMatchingType(tagHandlerTypes, out initializer))
+                {
+                    initializers.TryAdd(type, initializer);
+                    return true;
+                }
+
+                // If we still don't have a resolver type, do the search in all referenced assemblies for a resolver type
+                IEnumerable<Type> refdTagHandlerTypes = referencedAssemblies.SelectMany(asm => asm.GetTypesByAttribute<TagHandlerForAttribute>(true, attr => attr.Type == type))
+                                                                            .Where(t => !t.IsInterface && !t.IsAbstract);
+                if (TryFindMatchingType(tagHandlerTypes, out initializer))
+                {
+                    initializers.TryAdd(type, initializer);
+                    return true;
+                }
+
+                return false;
             }
+        }
+
+        private static bool TryFindMatchingType(IEnumerable<Type> tagHandlerTypes, out TagInitializationDelegate initializer)
+        {
+            Contract.Requires<ArgumentNullException>(tagHandlerTypes != null);
+            Contract.Ensures(!Contract.Result<bool>() || Contract.ValueAtReturn(out initializer) != null);
+
+            foreach (Type handlerType in tagHandlerTypes)
+            {
+                ConstructorInfo ci = handlerType.GetConstructor(constructorFinderArray);
+                if (ci != null)
+                {
+                    initializer = rdr => (Tag)ci.Invoke(new[] { rdr });
+
+                    return true;
+                }
+            }
+
+            initializer = null;
+            return false;
         }
 
         private static bool TryGetDefaultType(TagType type, out TagInitializationDelegate initializer)

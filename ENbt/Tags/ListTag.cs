@@ -29,7 +29,9 @@ namespace ENbt
         }
 
         public override int PayloadLength
-        {
+        { 
+            // Code contracts does not seem to like .Sum. It warns even though there are contracts that prevent the case it is warning about
+            [ContractVerification(false)]
             get
             {
                 return sizeof(int) + children.Sum(child => child.Length);
@@ -110,7 +112,7 @@ namespace ENbt
 
         public override bool Equals(Tag other)
         {
-            return (other != null) && this.Equals(other as ListTag);
+            return this.Equals(other as ListTag);
         }
 
         public bool Equals(ListTag other)

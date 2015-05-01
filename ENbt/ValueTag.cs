@@ -43,5 +43,20 @@ namespace ENbt
         {
             return (tag != null) ? tag.Value : default(T);
         }
+
+        public static bool operator ==(ValueTag<T> left, ValueTag<T> right)
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+                return false;
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ValueTag<T> left, ValueTag<T> right)
+        {
+            return !(left == right);
+        }
     }
 }
