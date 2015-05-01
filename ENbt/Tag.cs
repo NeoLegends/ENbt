@@ -200,13 +200,13 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(source != null);
             Contract.Requires<InvalidOperationException>(source.CanRead);
 
-            using (ENBtBinaryReader rdr = new ENBtBinaryReader(source, false))
+            using (ENbtBinaryReader rdr = new ENbtBinaryReader(source, false))
             {
                 return ReadFrom(rdr);
             }
         }
 
-        public static Tag ReadFrom(ENBtBinaryReader reader)
+        public static Tag ReadFrom(ENbtBinaryReader reader)
         {
             Contract.Requires<ArgumentNullException>(reader != null);
 
@@ -223,7 +223,7 @@ namespace ENbt
             return (T)ReadFrom(source);
         }
 
-        public static T ReadFrom<T>(ENBtBinaryReader reader)
+        public static T ReadFrom<T>(ENbtBinaryReader reader)
             where T : Tag
         {
             Contract.Requires<ArgumentNullException>(reader != null);

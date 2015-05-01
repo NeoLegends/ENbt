@@ -125,7 +125,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BigEndianBitConverter.cs" />
-    <Compile Include="ENBtBinaryReader.cs" />
+    <Compile Include="ENbtBinaryReader.cs" />
     <Compile Include="ENbtBinaryWriter.cs" />
     <Compile Include="EndianBinaryReader.cs" />
     <Compile Include="EndianBinaryWriter.cs" />

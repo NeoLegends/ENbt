@@ -12,7 +12,7 @@ namespace ENbt
     {
         public Int32Tag() : base(TagType.Int32) { }
 
-        public Int32Tag(ENBtBinaryReader reader)
+        public Int32Tag(ENbtBinaryReader reader)
             : this(reader.ReadInt32())
         {
             Contract.Requires<ArgumentNullException>(reader != null);
@@ -57,7 +57,7 @@ namespace ENbt
     {
         public UInt32Tag() : base(TagType.UInt32) { }
 
-        public UInt32Tag(ENBtBinaryReader reader)
+        public UInt32Tag(ENbtBinaryReader reader)
             : this(reader.ReadUInt32())
         {
             Contract.Requires<ArgumentNullException>(reader != null);

@@ -14,7 +14,7 @@ namespace ENbt
     {
         public SByteTag() : base(TagType.SByte) { }
 
-        public SByteTag(ENBtBinaryReader reader)
+        public SByteTag(ENbtBinaryReader reader)
             : this(reader.ReadSByte())
         {
             Contract.Requires<ArgumentNullException>(reader != null);
@@ -58,7 +58,7 @@ namespace ENbt
     {
         public ByteTag() : base(TagType.Byte) { }
 
-        public ByteTag(ENBtBinaryReader reader)
+        public ByteTag(ENbtBinaryReader reader)
             : this(reader.ReadByte())
         {
             Contract.Requires<ArgumentNullException>(reader != null);

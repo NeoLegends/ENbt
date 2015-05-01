@@ -30,7 +30,7 @@ namespace ENbt
 
         public EndTag() : base(TagType.End) { }
 
-        public EndTag(ENBtBinaryReader reader) : this() { }
+        public EndTag(ENbtBinaryReader reader) : this() { }
 
         public override bool Equals(Tag other)
         {

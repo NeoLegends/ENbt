@@ -52,7 +52,7 @@ namespace ENbt
 
         public ListTag() : base(TagType.List) { }
 
-        public ListTag(ENBtBinaryReader reader)
+        public ListTag(ENbtBinaryReader reader)
             : this()
         {
             Contract.Requires<ArgumentNullException>(reader != null);

@@ -74,7 +74,7 @@ namespace ENbt
 
         public ObjectTag() : base(TagType.Object) { }
 
-        public ObjectTag(ENBtBinaryReader reader)
+        public ObjectTag(ENbtBinaryReader reader)
             : this()
         {
             Contract.Requires<ArgumentNullException>(reader != null);

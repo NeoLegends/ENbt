@@ -30,7 +30,7 @@ namespace ENbt
 
         public StringTag() : base(TagType.String) { }
 
-        public StringTag(ENBtBinaryReader reader)
+        public StringTag(ENbtBinaryReader reader)
             : this(reader.ReadString())
         {
             Contract.Requires<ArgumentNullException>(reader != null);

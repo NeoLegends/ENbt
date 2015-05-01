@@ -89,7 +89,7 @@ namespace ENbt
             Contract.Requires<OverflowException>(value == null || value.LongLength <= int.MaxValue);
         }
 
-        public ByteArrayTag(ENBtBinaryReader reader)
+        public ByteArrayTag(ENbtBinaryReader reader)
             : this()
         {
             Contract.Requires<ArgumentNullException>(reader != null);

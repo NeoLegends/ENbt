@@ -12,7 +12,7 @@ namespace ENbt
     {
         public Int64Tag() : base(TagType.Int64) { }
 
-        public Int64Tag(ENBtBinaryReader reader)
+        public Int64Tag(ENbtBinaryReader reader)
             : this(reader.ReadInt64())
         {
             Contract.Requires<ArgumentNullException>(reader != null);
@@ -57,7 +57,7 @@ namespace ENbt
     {
         public UInt64Tag() : base(TagType.UInt64) { }
 
-        public UInt64Tag(ENBtBinaryReader reader)
+        public UInt64Tag(ENbtBinaryReader reader)
             : this(reader.ReadUInt64())
         {
             Contract.Requires<ArgumentNullException>(reader != null);

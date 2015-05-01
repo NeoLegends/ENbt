@@ -21,7 +21,7 @@ namespace ENbt
 
         public DateTag() : base(TagType.Date) { }
 
-        public DateTag(ENBtBinaryReader reader)
+        public DateTag(ENbtBinaryReader reader)
             : this(reader.ReadInt64())
         {
             Contract.Requires<ArgumentNullException>(reader != null);

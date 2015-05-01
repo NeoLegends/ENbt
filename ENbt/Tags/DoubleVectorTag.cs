@@ -24,7 +24,7 @@ namespace ENbt
 
         public DoubleVector2Tag() : base(TagType.DoubleVector2) { }
 
-        public DoubleVector2Tag(ENBtBinaryReader reader)
+        public DoubleVector2Tag(ENbtBinaryReader reader)
             : this(reader.ReadDouble(), reader.ReadDouble())
         {
             Contract.Requires<ArgumentNullException>(reader != null);
@@ -79,7 +79,7 @@ namespace ENbt
 
         public DoubleVector3Tag() : base(TagType.DoubleVector3) { }
 
-        public DoubleVector3Tag(ENBtBinaryReader reader)
+        public DoubleVector3Tag(ENbtBinaryReader reader)
             : this(reader.ReadDouble(), reader.ReadDouble(), reader.ReadDouble())
         {
             Contract.Requires<ArgumentNullException>(reader != null);
@@ -138,7 +138,7 @@ namespace ENbt
 
         public DoubleVector4Tag() : base(TagType.DoubleVector4) { }
 
-        public DoubleVector4Tag(ENBtBinaryReader reader)
+        public DoubleVector4Tag(ENbtBinaryReader reader)
             : this(reader.ReadDouble(), reader.ReadDouble(), reader.ReadDouble(), reader.ReadDouble())
         {
             Contract.Requires<ArgumentNullException>(reader != null);

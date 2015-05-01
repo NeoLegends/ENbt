@@ -20,7 +20,7 @@ namespace ENbt
 
         public TimeSpanTag() : base(TagType.TimeSpan) { }
 
-        public TimeSpanTag(ENBtBinaryReader reader)
+        public TimeSpanTag(ENbtBinaryReader reader)
             : this(reader.ReadInt64())
         {
             Contract.Requires<ArgumentNullException>(reader != null);

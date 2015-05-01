@@ -3,17 +3,18 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ENbt
 {
-    internal delegate Tag TagInitializationDelegate(ENBtBinaryReader reader);
+    internal delegate Tag TagInitializationDelegate(ENbtBinaryReader reader);
 
     internal class TagResolver
     {
-        private static readonly Type[] constructorFinderArray = new[] { typeof(ENBtBinaryReader) };
+        private static readonly Type[] constructorFinderArray = new[] { typeof(ENbtBinaryReader) };
 
         private static readonly Assembly entryAssembly = Assembly.GetEntryAssembly();
 
@@ -59,22 +60,28 @@ namespace ENbt
             }
             else
             {
-                // If there is no default resolver, try to get a resolver type from the entry assembly
-                IEnumerable<Type> tagHandlerTypes = entryAssembly.GetTypesByAttribute<TagHandlerForAttribute>(true, attr => attr.Type == type)
-                                                                 .Where(t => t.IsInterface && !t.IsAbstract);
-                if (TryFindMatchingType(tagHandlerTypes, out initializer))
+                if (entryAssembly != null)
                 {
-                    initializers.TryAdd(type, initializer);
-                    return true;
-                }
+                    // If there is no default resolver, try to get a resolver type from the entry assembly
+                    IEnumerable<Type> tagHandlerTypes = entryAssembly.GetTypesByAttribute<TagHandlerForAttribute>(true, attr => attr.Type == type)
+                                                                     .Where(t => t.IsInterface && !t.IsAbstract);
+                    if (TryFindMatchingType(tagHandlerTypes, out initializer))
+                    {
+                        initializers.TryAdd(type, initializer);
+                        return true;
+                    }
 
-                // If we still don't have a resolver type, do the search in all referenced assemblies for a resolver type
-                IEnumerable<Type> refdTagHandlerTypes = referencedAssemblies.SelectMany(asm => asm.GetTypesByAttribute<TagHandlerForAttribute>(true, attr => attr.Type == type))
-                                                                            .Where(t => !t.IsInterface && !t.IsAbstract);
-                if (TryFindMatchingType(tagHandlerTypes, out initializer))
-                {
-                    initializers.TryAdd(type, initializer);
-                    return true;
+                    if (referencedAssemblies != null)
+                    {
+                        // If we still don't have a resolver type, do the search in all referenced assemblies for a resolver type
+                        IEnumerable<Type> refdTagHandlerTypes = referencedAssemblies.SelectMany(asm => asm.GetTypesByAttribute<TagHandlerForAttribute>(true, attr => attr.Type == type))
+                                                                                    .Where(t => !t.IsInterface && !t.IsAbstract);
+                        if (TryFindMatchingType(tagHandlerTypes, out initializer))
+                        {
+                            initializers.TryAdd(type, initializer);
+                            return true;
+                        }
+                    }
                 }
 
                 return false;
@@ -91,7 +98,10 @@ namespace ENbt
                 ConstructorInfo ci = handlerType.GetConstructor(constructorFinderArray);
                 if (ci != null)
                 {
-                    initializer = rdr => (Tag)ci.Invoke(new[] { rdr });
+                    initializer = Expression.Lambda<TagInitializationDelegate>(
+                        Expression.New(ci, Expression.Parameter(typeof(ENbtBinaryReader))),
+                        Expression.Parameter(typeof(ENbtBinaryReader))
+                    ).Compile();
 
                     return true;
                 }

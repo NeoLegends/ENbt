@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ENbt
 {
-    public class ENBtBinaryReader : IDisposable
+    public class ENbtBinaryReader : IDisposable
     {
         private static readonly UTF8Encoding encoding = new UTF8Encoding(false);
 
@@ -18,14 +18,14 @@ namespace ENbt
 
         private readonly Stream source;
 
-        public ENBtBinaryReader(Stream source)
+        public ENbtBinaryReader(Stream source)
             : this(source, true)
         {
             Contract.Requires<ArgumentNullException>(source != null);
             Contract.Requires<ArgumentException>(source.CanRead);
         }
 
-        public ENBtBinaryReader(Stream source, bool ownsSource)
+        public ENbtBinaryReader(Stream source, bool ownsSource)
         {
             Contract.Requires<ArgumentNullException>(source != null);
             Contract.Requires<ArgumentException>(source.CanRead);
@@ -35,7 +35,7 @@ namespace ENbt
             this.source = source;
         }
 
-        ~ENBtBinaryReader()
+        ~ENbtBinaryReader()
         {
             this.Dispose(false);
         }
@@ -123,6 +123,10 @@ namespace ENbt
             if (length < 0)
             {
                 throw new InvalidOperationException(string.Format("Negative string length ({0}) given!", length));
+            }
+            if (length == 0)
+            {
+                return string.Empty;
             }
 
             byte[] buffer = new byte[length]; // Will be collected in Gen0
