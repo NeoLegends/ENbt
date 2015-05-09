@@ -10,7 +10,15 @@ namespace ENbt
     [TagHandlerFor(TagType.Int16)]
     public class Int16Tag : ValueTag<short>, IComparable<Int16Tag>, IEquatable<Int16Tag>
     {
-        public Int16Tag() : base(TagType.Int16) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.Int16;
+            }
+        }
+
+        public Int16Tag() { }
 
         public Int16Tag(ENbtBinaryReader reader)
             : this(reader.ReadInt16())
@@ -18,7 +26,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public Int16Tag(Int16 value) : base(TagType.Int16, value) { }
+        public Int16Tag(Int16 value) : base(value) { }
 
         public int CompareTo(Int16Tag other)
         {
@@ -55,7 +63,15 @@ namespace ENbt
     [TagHandlerFor(TagType.UInt16)]
     public class UInt16Tag : ValueTag<ushort>, IComparable<UInt16Tag>, IEquatable<UInt16Tag>
     {
-        public UInt16Tag() : base(TagType.UInt16) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.UInt16;
+            }
+        }
+
+        public UInt16Tag() { }
 
         public UInt16Tag(ENbtBinaryReader reader)
             : this(reader.ReadUInt16())
@@ -63,7 +79,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public UInt16Tag(UInt16 value) : base(TagType.UInt16, value) { }
+        public UInt16Tag(UInt16 value) : base(value) { }
 
         public int CompareTo(UInt16Tag other)
         {

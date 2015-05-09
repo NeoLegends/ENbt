@@ -38,6 +38,14 @@ namespace ENbt
             }
         }
 
+        public override TagType Type
+        {
+            get 
+            {
+                return TagType.ByteArray;
+            }
+        }
+
         public override byte[] Value
         {
             get
@@ -81,10 +89,10 @@ namespace ENbt
             }
         }
 
-        public ByteArrayTag() : base(TagType.ByteArray) { }
+        public ByteArrayTag() { }
 
         public ByteArrayTag(byte[] value)
-            : base(TagType.ByteArray, value) 
+            : base(value) 
         {
             Contract.Requires<OverflowException>(value == null || value.LongLength <= int.MaxValue);
         }

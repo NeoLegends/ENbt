@@ -10,7 +10,15 @@ namespace ENbt
     [TagHandlerFor(TagType.Int32)]
     public class Int32Tag : ValueTag<Int32>, IComparable<Int32Tag>, IEquatable<Int32Tag>
     {
-        public Int32Tag() : base(TagType.Int32) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.Int32;
+            }
+        }
+
+        public Int32Tag() { }
 
         public Int32Tag(ENbtBinaryReader reader)
             : this(reader.ReadInt32())
@@ -18,7 +26,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public Int32Tag(Int32 value) : base(TagType.Int32, value) { }
+        public Int32Tag(Int32 value) : base(value) { }
 
         public int CompareTo(Int32Tag other)
         {
@@ -55,7 +63,15 @@ namespace ENbt
     [TagHandlerFor(TagType.UInt32)]
     public class UInt32Tag : ValueTag<uint>, IComparable<UInt32Tag>, IEquatable<UInt32Tag>
     {
-        public UInt32Tag() : base(TagType.UInt32) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.UInt32;
+            }
+        }
+
+        public UInt32Tag() { }
 
         public UInt32Tag(ENbtBinaryReader reader)
             : this(reader.ReadUInt32())
@@ -63,7 +79,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public UInt32Tag(UInt32 value) : base(TagType.UInt32, value) { }
+        public UInt32Tag(UInt32 value) : base(value) { }
 
         public int CompareTo(UInt32Tag other)
         {

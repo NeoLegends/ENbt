@@ -12,7 +12,7 @@ namespace ENbt
 {
     internal delegate Tag TagInitializationDelegate(ENbtBinaryReader reader);
 
-    internal class TagResolver
+    internal static class TagResolver
     {
         private static readonly Type[] constructorFinderArray = new[] { typeof(ENbtBinaryReader) };
 
@@ -21,6 +21,8 @@ namespace ENbt
         private static readonly ConcurrentDictionary<TagType, TagInitializationDelegate> initializers = new ConcurrentDictionary<TagType, TagInitializationDelegate>();
 
         private static readonly IEnumerable<Assembly> referencedAssemblies;
+
+        private static readonly ParameterExpression readerParamExpression = Expression.Parameter(typeof(ENbtBinaryReader));
 
         static TagResolver()
         {
@@ -36,21 +38,19 @@ namespace ENbt
             }
         }
 
-        public TagResolver() { }
-
-        public TagInitializationDelegate Resolve(TagType type)
+        public static TagInitializationDelegate Resolve(TagType type)
         {
             Contract.Ensures(Contract.Result<TagInitializationDelegate>() != null);
 
             TagInitializationDelegate result;
-            if (!this.TryResolve(type, out result))
+            if (!TryResolve(type, out result))
             {
                 throw new TagUnknownException(type, "Tag unknown!");
             }
             return result;
         }
 
-        public bool TryResolve(TagType type, out TagInitializationDelegate initializer)
+        public static bool TryResolve(TagType type, out TagInitializationDelegate initializer)
         {
             Contract.Ensures(!Contract.Result<bool>() || Contract.ValueAtReturn(out initializer) != null);
 
@@ -64,7 +64,7 @@ namespace ENbt
                 {
                     // If there is no default resolver, try to get a resolver type from the entry assembly
                     IEnumerable<Type> tagHandlerTypes = entryAssembly.GetTypesByAttribute<TagHandlerForAttribute>(true, attr => attr.Type == type)
-                                                                     .Where(t => t.IsInterface && !t.IsAbstract);
+                                                                     .Where(t => !t.IsInterface && !t.IsAbstract);
                     if (TryFindMatchingType(tagHandlerTypes, out initializer))
                     {
                         initializers.TryAdd(type, initializer);
@@ -99,8 +99,8 @@ namespace ENbt
                 if (ci != null)
                 {
                     initializer = Expression.Lambda<TagInitializationDelegate>(
-                        Expression.New(ci, Expression.Parameter(typeof(ENbtBinaryReader))),
-                        Expression.Parameter(typeof(ENbtBinaryReader))
+                        Expression.New(ci, readerParamExpression),
+                        readerParamExpression
                     ).Compile();
 
                     return true;
@@ -118,7 +118,7 @@ namespace ENbt
             switch (type)
             {
                 case TagType.End:
-                    initializer = rdr => new EndTag(rdr);
+                    initializer = rdr => EndTag.Default;
                     break;
                 case TagType.Object:
                     initializer = rdr => new ObjectTag(rdr);

@@ -21,12 +21,21 @@ namespace ENbt
 
         public virtual T Value { get; set; }
 
-        protected ValueTag(TagType type) : base(type) { }
+        protected ValueTag() { }
 
-        protected ValueTag(TagType type, T value) 
-            : base(type) 
+        protected ValueTag(T value) 
         {
             this.Value = value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(obj, this))
+                return true;
+            if (ReferenceEquals(obj, null))
+                return false;
+
+            return this.Equals(obj as ValueTag<T>);
         }
 
         public override int GetHashCode()

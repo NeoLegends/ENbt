@@ -19,7 +19,15 @@ namespace ENbt
             }
         }
 
-        public DateTag() : base(TagType.Date) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.Date;
+            }
+        }
+
+        public DateTag() { }
 
         public DateTag(ENbtBinaryReader reader)
             : this(reader.ReadInt64())
@@ -29,7 +37,7 @@ namespace ENbt
 
         public DateTag(long unixTimeMs) : this(unixTimeMs.FromUnixTimeMilliseconds()) { }
 
-        public DateTag(DateTime value) : base(TagType.Date, value) { }
+        public DateTag(DateTime value) : base(value) { }
 
         public int CompareTo(DateTag other)
         {

@@ -28,13 +28,21 @@ namespace ENbt
             }
         }
 
-        public EndTag() : base(TagType.End) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.End;
+            }
+        }
+
+        public EndTag() { }
 
         public EndTag(ENbtBinaryReader reader) : this() { }
 
         public override bool Equals(Tag other)
         {
-            return (other != null) && (other is EndTag);
+            return (other is EndTag);
         }
 
         public bool Equals(EndTag other)

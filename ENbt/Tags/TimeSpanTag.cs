@@ -18,7 +18,15 @@ namespace ENbt
             }
         }
 
-        public TimeSpanTag() : base(TagType.TimeSpan) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.TimeSpan;
+            }
+        }
+
+        public TimeSpanTag() { }
 
         public TimeSpanTag(ENbtBinaryReader reader)
             : this(reader.ReadInt64())
@@ -28,7 +36,7 @@ namespace ENbt
 
         public TimeSpanTag(long ticks) : this(TimeSpan.FromTicks(ticks)) { }
 
-        public TimeSpanTag(TimeSpan value) : base(TagType.TimeSpan, value) { }
+        public TimeSpanTag(TimeSpan value) : base(value) { }
 
         public int CompareTo(TimeSpanTag other)
         {

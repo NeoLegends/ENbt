@@ -43,6 +43,14 @@ namespace ENbt
                 return children.Values.Sum(child => child.Length) + EndTag.Default.Length;
             }
         }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.Object;
+            }
+        }
+
 
         public ICollection<Tag> Values
         {
@@ -72,7 +80,7 @@ namespace ENbt
             }
         }
 
-        public ObjectTag() : base(TagType.Object) { }
+        public ObjectTag() { }
 
         public ObjectTag(ENbtBinaryReader reader)
             : this()

@@ -19,11 +19,19 @@ namespace ENbt
             }
         }
 
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.ByteVector2;
+            }
+        }
+
         public byte X { get; set; }
 
         public byte Y { get; set; }
 
-        public ByteVector2Tag() : base(TagType.ByteVector2) { }
+        public ByteVector2Tag() { }
 
         public ByteVector2Tag(ENbtBinaryReader reader)
             : this(reader.ReadByte(), reader.ReadByte())
@@ -72,13 +80,21 @@ namespace ENbt
             }
         }
 
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.ByteVector3;
+            }
+        }
+
         public byte X { get; set; }
 
         public byte Y { get; set; }
 
         public byte Z { get; set; }
 
-        public ByteVector3Tag() : base(TagType.ByteVector3) { }
+        public ByteVector3Tag() { }
 
         public ByteVector3Tag(ENbtBinaryReader reader)
             : this(reader.ReadByte(), reader.ReadByte(), reader.ReadByte())
@@ -129,6 +145,14 @@ namespace ENbt
             }
         }
 
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.ByteVector4;
+            }
+        }
+
         public byte X { get; set; }
 
         public byte Y { get; set; }
@@ -137,7 +161,7 @@ namespace ENbt
 
         public byte W { get; set; }
 
-        public ByteVector4Tag() : base(TagType.ByteVector4) { }
+        public ByteVector4Tag() { }
 
         public ByteVector4Tag(ENbtBinaryReader reader)
             : this(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte())

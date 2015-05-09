@@ -29,18 +29,20 @@ namespace ENbt
             Contract.Requires<ArgumentException>(typeof(Attribute).IsAssignableFrom(attributeType));
             Contract.Ensures(Contract.Result<IEnumerable<Type>>() != null);
 
-            return from searchResult in (includeNonPublic ? assembly.GetTypes() : assembly.GetExportedTypes())
-                   where searchResult.GetCustomAttributes().Any(attribute => attributeType.IsAssignableFrom(attribute.GetType()) && (attributeFilter == null || attributeFilter(attribute)))
-                   select searchResult;
+            return from type in (includeNonPublic ? assembly.GetTypes() : assembly.GetExportedTypes())
+                   where type.GetCustomAttributes(attributeType).Any(attribute => (attributeFilter == null) || attributeFilter(attribute))
+                   select type;
         }
 
         public static int ReadExactly(this Stream s, byte[] buffer, int offset, int count)
         {
             Contract.Requires<ArgumentNullException>(s != null);
+            Contract.Requires<ArgumentException>(s.CanRead);
             Contract.Requires<ArgumentNullException>(buffer != null);
             Contract.Requires<ArgumentOutOfRangeException>(offset >= 0);
             Contract.Requires<ArgumentOutOfRangeException>(count >= 0);
             Contract.Requires<ArgumentOutOfRangeException>((offset + count) <= buffer.Length);
+            Contract.Ensures(Contract.Result<int>() >= 0);
 
             int totalRead = 0;
             while (totalRead < count)

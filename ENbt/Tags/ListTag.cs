@@ -37,6 +37,14 @@ namespace ENbt
                 return sizeof(int) + children.Sum(child => child.Length);
             }
         }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.List;
+            }
+        }
+
 
         public Tag this[int index]
         {
@@ -50,7 +58,7 @@ namespace ENbt
             }
         }
 
-        public ListTag() : base(TagType.List) { }
+        public ListTag() { }
 
         public ListTag(ENbtBinaryReader reader)
             : this()

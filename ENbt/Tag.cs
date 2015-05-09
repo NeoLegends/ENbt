@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace ENbt
 {
+    /// <summary>
+    /// Represents a value in ENbt.
+    /// </summary>
     [ContractClass(typeof(TagContracts))]
     public abstract class Tag : IEquatable<Tag>
     {
-        private static readonly TagResolver resolver = new TagResolver();
-
         #region Conversion Properties
 
         public byte AsByte
@@ -149,6 +150,9 @@ namespace ENbt
 
         #endregion
 
+        /// <summary>
+        /// The total length (in bytes) of the <see cref="Tag"/>-
+        /// </summary>
         public virtual int Length
         {
             get
@@ -159,22 +163,58 @@ namespace ENbt
             }
         }
 
+        /// <summary>
+        /// The length of the <see cref="Tag"/> minus the length of the header.
+        /// </summary>
         public abstract int PayloadLength { get; }
 
-        public TagType Type { get; private set; }
+        /// <summary>
+        /// The type of the <see cref="Tag"/>.
+        /// </summary>
+        /// <seealso cref="TagType"/>
+        public abstract TagType Type { get; }
 
-        protected Tag(TagType type)
-        {
-            this.Type = type;
-        }
+        /// <summary>
+        /// Initializes a new <see cref="Tag"/>.
+        /// </summary>
+        protected Tag() { }
 
+        /// <summary>
+        /// Casts the <see cref="Tag"/> to another object of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The <see cref="Type"/> of object to cast to.</typeparam>
+        /// <returns>The <see cref="Tag"/> casted to an object of the specified type.</returns>
         public T As<T>()
         {
             return (T)(object)this;
         }
 
+        /// <summary>
+        /// Checks whether the current object equals the other specified object.
+        /// </summary>
+        /// <param name="obj">The object to test for equality.</param>
+        /// <returns><c>true</c> if the objects are equal, otherwise <c>false</c>.</returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(obj, this))
+                return true;
+            if (ReferenceEquals(obj, null))
+                return false;
+
+            return this.Equals(obj as Tag);
+        }
+
+        /// <summary>
+        /// Checks whether the current object equals the other specified object.
+        /// </summary>
+        /// <param name="other">The object to test for equality.</param>
+        /// <returns><c>true</c> if the objects are equal, otherwise <c>false</c>.</returns>
         public abstract bool Equals(Tag other);
 
+        /// <summary>
+        /// Writes the <see cref="Tag"/> to the specified <paramref name="destination"/>.
+        /// </summary>
+        /// <param name="destination">The <see cref="Stream"/> to write the <see cref="Tag"/> to.</param>
         public void WriteTo(Stream destination)
         {
             Contract.Requires<ArgumentNullException>(destination != null);
@@ -185,6 +225,10 @@ namespace ENbt
             }
         }
 
+        /// <summary>
+        /// Writes the <see cref="Tag"/> to the specified <paramref name="writer"/>.
+        /// </summary>
+        /// <param name="writer">The <see cref="ENbtBinaryWriter"/> to write the tag to.</param>
         public void WriteTo(ENbtBinaryWriter writer)
         {
             Contract.Requires<ArgumentNullException>(writer != null);
@@ -193,6 +237,10 @@ namespace ENbt
             this.WritePayloadTo(writer);
         }
 
+        /// <summary>
+        /// Writes the payload (all data without the tag type) of the <see cref="Tag"/> to the specified <paramref name="writer"/>.
+        /// </summary>
+        /// <param name="writer">The <see cref="ENbtBinaryWriter"/> to write the tag to.</param>
         protected abstract void WritePayloadTo(ENbtBinaryWriter writer);
 
         public static Tag ReadFrom(Stream source)
@@ -210,8 +258,8 @@ namespace ENbt
         {
             Contract.Requires<ArgumentNullException>(reader != null);
 
-            return resolver.Resolve(reader.ReadTagType())
-                           .Invoke(reader);
+            return TagResolver.Resolve(reader.ReadTagType())
+                              .Invoke(reader);
         }
 
         public static T ReadFrom<T>(Stream source)
@@ -230,6 +278,21 @@ namespace ENbt
 
             return (T)ReadFrom(reader);
         }
+
+        public static bool operator ==(Tag left, Tag right)
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+                return false;
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Tag left, Tag right)
+        {
+            return !(left == right);
+        }
     }
 
     [ContractClassFor(typeof(Tag))]
@@ -245,7 +308,15 @@ namespace ENbt
             }
         }
 
-        protected TagContracts() : base(TagType.End) { }
+        public override TagType Type
+        {
+            get 
+            {
+                return TagType.End;
+            }
+        }
+
+        protected TagContracts() { }
 
         public override bool Equals(Tag other)
         {

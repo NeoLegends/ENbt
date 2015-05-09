@@ -18,11 +18,19 @@ namespace ENbt
             }
         }
 
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.SingleVector2;
+            }
+        }
+
         public float X { get; set; }
 
         public float Y { get; set; }
 
-        public SingleVector2Tag() : base(TagType.SingleVector2) { }
+        public SingleVector2Tag() { }
 
         public SingleVector2Tag(ENbtBinaryReader reader)
             : this(reader.ReadSingle(), reader.ReadSingle())
@@ -71,13 +79,21 @@ namespace ENbt
             }
         }
 
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.SingleVector3;
+            }
+        }
+
         public float X { get; set; }
 
         public float Y { get; set; }
 
         public float Z { get; set; }
 
-        public SingleVector3Tag() : base(TagType.SingleVector3) { }
+        public SingleVector3Tag() { }
 
         public SingleVector3Tag(ENbtBinaryReader reader)
             : this(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle())
@@ -128,6 +144,14 @@ namespace ENbt
             }
         }
 
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.SingleVector4;
+            }
+        }
+
         public float X { get; set; }
 
         public float Y { get; set; }
@@ -136,7 +160,7 @@ namespace ENbt
 
         public float W { get; set; }
 
-        public SingleVector4Tag() : base(TagType.SingleVector4) { }
+        public SingleVector4Tag() { }
 
         public SingleVector4Tag(ENbtBinaryReader reader)
             : this(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle())

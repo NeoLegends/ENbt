@@ -12,7 +12,15 @@ namespace ENbt
     [TagHandlerFor(TagType.SByte)]
     public class SByteTag : ValueTag<sbyte>, IComparable<SByteTag>, IEquatable<SByteTag>
     {
-        public SByteTag() : base(TagType.SByte) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.SByte;
+            }
+        }
+
+        public SByteTag() { }
 
         public SByteTag(ENbtBinaryReader reader)
             : this(reader.ReadSByte())
@@ -20,7 +28,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public SByteTag(sbyte value) : base(TagType.SByte, value) { }
+        public SByteTag(sbyte value) : base(value) { }
 
         public int CompareTo(SByteTag other)
         {
@@ -56,7 +64,15 @@ namespace ENbt
     [TagHandlerFor(TagType.Byte)]
     public class ByteTag : ValueTag<byte>, IComparable<ByteTag>, IEquatable<ByteTag>
     {
-        public ByteTag() : base(TagType.Byte) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.Byte;
+            }
+        }
+
+        public ByteTag() { }
 
         public ByteTag(ENbtBinaryReader reader)
             : this(reader.ReadByte())
@@ -64,7 +80,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public ByteTag(byte value) : base(TagType.Byte, value) { }
+        public ByteTag(byte value) : base(value) { }
 
         public int CompareTo(ByteTag other)
         {

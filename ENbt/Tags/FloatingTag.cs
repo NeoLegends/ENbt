@@ -10,7 +10,15 @@ namespace ENbt
     [TagHandlerFor(TagType.Single)]
     public class SingleTag : ValueTag<Single>, IComparable<SingleTag>, IEquatable<SingleTag>
     {
-        public SingleTag() : base(TagType.Single) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.Single;
+            }
+        }
+
+        public SingleTag() { }
 
         public SingleTag(ENbtBinaryReader reader)
             : this(reader.ReadSingle())
@@ -18,7 +26,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public SingleTag(Single value) : base(TagType.Single, value) { }
+        public SingleTag(Single value) : base(value) { }
 
         public int CompareTo(SingleTag other)
         {
@@ -54,7 +62,15 @@ namespace ENbt
     [TagHandlerFor(TagType.Double)]
     public class DoubleTag : ValueTag<Double>, IComparable<DoubleTag>, IEquatable<DoubleTag>
     {
-        public DoubleTag() : base(TagType.Double) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.Double;
+            }
+        }
+
+        public DoubleTag() { }
 
         public DoubleTag(ENbtBinaryReader reader)
             : this(reader.ReadDouble())
@@ -62,7 +78,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public DoubleTag(Double value) : base(TagType.Double, value) { }
+        public DoubleTag(Double value) : base(value) { }
 
         public int CompareTo(DoubleTag other)
         {

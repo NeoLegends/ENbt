@@ -28,7 +28,15 @@ namespace ENbt
             }
         }
 
-        public StringTag() : base(TagType.String) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.String;
+            }
+        }
+
+        public StringTag() { }
 
         public StringTag(ENbtBinaryReader reader)
             : this(reader.ReadString())
@@ -36,7 +44,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public StringTag(string value) : base(TagType.String, value) { }
+        public StringTag(string value) : base(value) { }
 
         public int CompareTo(StringTag other)
         {

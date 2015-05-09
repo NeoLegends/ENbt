@@ -10,7 +10,15 @@ namespace ENbt
     [TagHandlerFor(TagType.Int64)]
     public class Int64Tag : ValueTag<Int64>, IComparable<Int64Tag>, IEquatable<Int64Tag>
     {
-        public Int64Tag() : base(TagType.Int64) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.Int64;
+            }
+        }
+
+        public Int64Tag() { }
 
         public Int64Tag(ENbtBinaryReader reader)
             : this(reader.ReadInt64())
@@ -18,7 +26,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public Int64Tag(Int64 value) : base(TagType.Int64, value) { }
+        public Int64Tag(Int64 value) : base(value) { }
 
         public int CompareTo(Int64Tag other)
         {
@@ -55,7 +63,15 @@ namespace ENbt
     [TagHandlerFor(TagType.UInt64)]
     public class UInt64Tag : ValueTag<UInt64>, IComparable<UInt64Tag>, IEquatable<UInt64Tag>
     {
-        public UInt64Tag() : base(TagType.UInt64) { }
+        public override TagType Type
+        {
+            get
+            {
+                return TagType.UInt64;
+            }
+        }
+
+        public UInt64Tag() { }
 
         public UInt64Tag(ENbtBinaryReader reader)
             : this(reader.ReadUInt64())
@@ -63,7 +79,7 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public UInt64Tag(UInt64 value) : base(TagType.UInt64, value) { }
+        public UInt64Tag(UInt64 value) : base(value) { }
 
         public int CompareTo(UInt64Tag other)
         {
