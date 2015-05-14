@@ -8,6 +8,15 @@ namespace ENbt.Tests
 {
     internal static class Helpers
     {
+        public static ArrayTag GenerateLongArray()
+        {
+            Random r = new Random();
+            return new ArrayTag(
+                Enumerable.Range(0, 1500).Select(i => new Int32Tag(r.Next())),
+                TagType.Int32
+            );
+        }
+
         public static ListTag GenerateLongList()
         {
             Random r = new Random();
@@ -37,7 +46,7 @@ namespace ENbt.Tests
                     {  
                         { "TestString2", new StringTag("Test string!") },
                         { "TestInt", new Int32Tag(150) },
-                        { "TestByteArray", new ByteArrayTag(arr) }
+                        { "TestByteArray", new ArrayTag(arr.Select(b => new ByteTag(b)), TagType.Byte) }
                     }
                 }
             };

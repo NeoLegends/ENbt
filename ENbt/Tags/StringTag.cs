@@ -71,7 +71,7 @@ namespace ENbt
             return (this.Value == other.Value);
         }
 
-        protected override void WritePayloadTo(ENbtBinaryWriter writer)
+        public override void WritePayloadTo(ENbtBinaryWriter writer)
         {
             writer.Write(this.Value);
         }

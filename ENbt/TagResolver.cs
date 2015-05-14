@@ -123,6 +123,9 @@ namespace ENbt
                 case TagType.Object:
                     initializer = rdr => new ObjectTag(rdr);
                     break;
+                case TagType.Array:
+                    initializer = rdr => new ArrayTag(rdr);
+                    break;
                 case TagType.List:
                     initializer = rdr => new ListTag(rdr);
                     break;
@@ -164,9 +167,6 @@ namespace ENbt
                     break;
                 case TagType.TimeSpan:
                     initializer = rdr => new TimeSpanTag(rdr);
-                    break;
-                case TagType.ByteArray:
-                    initializer = rdr => new ByteArrayTag(rdr);
                     break;
                 case TagType.ByteVector2:
                     initializer = rdr => new ByteVector2Tag(rdr);

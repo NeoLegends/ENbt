@@ -206,7 +206,7 @@ namespace ENbt
             return this.children.TryGetValue(key, out value);
         }
 
-        protected override void WritePayloadTo(ENbtBinaryWriter writer)
+        public override void WritePayloadTo(ENbtBinaryWriter writer)
         {
             foreach (KeyValuePair<StringTag, Tag> child in this.children)
             {

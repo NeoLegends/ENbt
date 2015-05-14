@@ -62,7 +62,7 @@ namespace ENbt
             return (this.X == other.X) && (this.Y == other.Y);
         }
 
-        protected override void WritePayloadTo(ENbtBinaryWriter writer)
+        public override void WritePayloadTo(ENbtBinaryWriter writer)
         {
             writer.Write(this.X);
             writer.Write(this.Y);
@@ -126,7 +126,7 @@ namespace ENbt
             return (this.X == other.X) && (this.Y == other.Y) && (this.Z == other.Z);
         }
 
-        protected override void WritePayloadTo(ENbtBinaryWriter writer)
+        public override void WritePayloadTo(ENbtBinaryWriter writer)
         {
             writer.Write(this.X);
             writer.Write(this.Y);
@@ -194,7 +194,7 @@ namespace ENbt
             return (this.X == other.X) && (this.Y == other.Y) && (this.Z == other.Z) && (this.W == other.W);
         }
 
-        protected override void WritePayloadTo(ENbtBinaryWriter writer)
+        public override void WritePayloadTo(ENbtBinaryWriter writer)
         {
             writer.Write(this.X);
             writer.Write(this.Y);

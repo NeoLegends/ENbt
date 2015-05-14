@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace ENbt
 {
-    [TagHandlerFor(TagType.SingleVector2)]
-    public class SingleVector2Tag : Tag, IEquatable<SingleVector2Tag>
+    [TagHandlerFor(TagType.Int32Vector2)]
+    public class Int32Vector2Tag : Tag, IEquatable<Int32Vector2Tag>
     {
         public override int PayloadLength
         {
             get
             {
-                return sizeof(float) * 2;
+                return sizeof(int) * 2;
             }
         }
 
@@ -22,23 +22,23 @@ namespace ENbt
         {
             get
             {
-                return TagType.SingleVector2;
+                return TagType.Int32Vector2;
             }
         }
 
-        public float X { get; set; }
+        public int X { get; set; }
 
-        public float Y { get; set; }
+        public int Y { get; set; }
 
-        public SingleVector2Tag() { }
+        public Int32Vector2Tag() { }
 
-        public SingleVector2Tag(ENbtBinaryReader reader)
-            : this(reader.ReadSingle(), reader.ReadSingle())
+        public Int32Vector2Tag(ENbtBinaryReader reader)
+            : this(reader.ReadInt32(), reader.ReadInt32())
         {
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public SingleVector2Tag(float x, float y)
+        public Int32Vector2Tag(int x, int y)
             : this()
         {
             this.X = x;
@@ -47,11 +47,11 @@ namespace ENbt
 
         public override bool Equals(Tag other)
         {
-            SingleVector2Tag tag = other as SingleVector2Tag;
+            Int32Vector2Tag tag = other as Int32Vector2Tag;
             return (tag != null) && this.Equals(tag);
         }
 
-        public bool Equals(SingleVector2Tag other)
+        public bool Equals(Int32Vector2Tag other)
         {
             if (ReferenceEquals(other, this))
                 return true;
@@ -68,14 +68,14 @@ namespace ENbt
         }
     }
 
-    [TagHandlerFor(TagType.SingleVector3)]
-    public class SingleVector3Tag : Tag, IEquatable<SingleVector3Tag>
+    [TagHandlerFor(TagType.Int32Vector3)]
+    public class Int32Vector3Tag : Tag, IEquatable<Int32Vector3Tag>
     {
         public override int PayloadLength
         {
             get
             {
-                return sizeof(float) * 3;
+                return sizeof(int) * 3;
             }
         }
 
@@ -83,25 +83,25 @@ namespace ENbt
         {
             get
             {
-                return TagType.SingleVector3;
+                return TagType.Int32Vector3;
             }
         }
 
-        public float X { get; set; }
+        public int X { get; set; }
 
-        public float Y { get; set; }
+        public int Y { get; set; }
 
-        public float Z { get; set; }
+        public int Z { get; set; }
 
-        public SingleVector3Tag() { }
+        public Int32Vector3Tag() { }
 
-        public SingleVector3Tag(ENbtBinaryReader reader)
-            : this(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle())
+        public Int32Vector3Tag(ENbtBinaryReader reader)
+            : this(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32())
         {
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public SingleVector3Tag(float x, float y, float z)
+        public Int32Vector3Tag(int x, int y, int z)
             : this()
         {
             this.X = x;
@@ -111,11 +111,11 @@ namespace ENbt
 
         public override bool Equals(Tag other)
         {
-            SingleVector3Tag tag = other as SingleVector3Tag;
+            Int32Vector3Tag tag = other as Int32Vector3Tag;
             return (tag != null) && this.Equals(tag);
         }
 
-        public bool Equals(SingleVector3Tag other)
+        public bool Equals(Int32Vector3Tag other)
         {
             if (ReferenceEquals(other, this))
                 return true;
@@ -133,14 +133,14 @@ namespace ENbt
         }
     }
 
-    [TagHandlerFor(TagType.SingleVector4)]
-    public class SingleVector4Tag : Tag, IEquatable<SingleVector4Tag>
+    [TagHandlerFor(TagType.Int32Vector4)]
+    public class Int32Vector4Tag : Tag, IEquatable<Int32Vector4Tag>
     {
         public override int PayloadLength
         {
             get
             {
-                return sizeof(float) * 4;
+                return sizeof(int) * 4;
             }
         }
 
@@ -148,27 +148,27 @@ namespace ENbt
         {
             get
             {
-                return TagType.SingleVector4;
+                return TagType.Int32Vector4;
             }
         }
 
-        public float X { get; set; }
+        public int X { get; set; }
 
-        public float Y { get; set; }
+        public int Y { get; set; }
 
-        public float Z { get; set; }
+        public int Z { get; set; }
 
-        public float W { get; set; }
+        public int W { get; set; }
 
-        public SingleVector4Tag() { }
+        public Int32Vector4Tag() { }
 
-        public SingleVector4Tag(ENbtBinaryReader reader)
-            : this(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle())
+        public Int32Vector4Tag(ENbtBinaryReader reader)
+            : this(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32())
         {
             Contract.Requires<ArgumentNullException>(reader != null);
         }
 
-        public SingleVector4Tag(float x, float y, float z, float w)
+        public Int32Vector4Tag(int x, int y, int z, int w)
             : this()
         {
             this.X = x;
@@ -179,11 +179,11 @@ namespace ENbt
 
         public override bool Equals(Tag other)
         {
-            SingleVector4Tag tag = other as SingleVector4Tag;
+            Int32Vector4Tag tag = other as Int32Vector4Tag;
             return (tag != null) && this.Equals(tag);
         }
 
-        public bool Equals(SingleVector4Tag other)
+        public bool Equals(Int32Vector4Tag other)
         {
             if (ReferenceEquals(other, this))
                 return true;

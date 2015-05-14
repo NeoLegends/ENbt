@@ -38,30 +38,33 @@ The following tags are pre-defined in ENbt:
 
 - `End = 0`, End marker of object.
 - `Object = 1`, A tag containing other tags by name. Items may have different types.
-- `List = 2`, A tag containing other tags by index. Items may have different types.
-- `SByte = 3`, A signed 8-bit integer.
-- `Byte = 4`, An unsigned 8-bit integer.
-- `Int16 = 5`, A signed 16-bit integer.
-- `UInt16 = 6`, An unsigned 16-bit integer.
-- `Int32 = 7`, A signed 32-bit integer.
-- `UInt32 = 8`, An unsigned 32-bit integer.
-- `Int64 = 9`, A signed 64-bit integer.
-- `UInt64 = 10`, An unsigned 64-bit integer.
-- `Single = 11`, IEEE 754 32-bit floating point (single accuracy).
-- `Double = 12`, IEEE 754 64-bit floating point (double accuracy).
-- `String = 13`, 32-bit length prefixed, UTF-8 encoded string.
-- `Date = 14`, Date and time store, internally stored as UNIX time in milliseconds (Int64).
-- `TimeSpan = 15`, Duration store, internally stored as ticks, which represent 100 nanoseconds each (Int64).
-- `ByteArray = 16`, A dedicated data type for a 32-bit length-prefixed array of unsigned 8-bit integers, in order to reduce the overhead of List for raw binary content.
-- `ByteVector2 = 17`, A two-component, 8-bit integer vector.
-- `ByteVector3 = 18`, A three-component, 8-bit integer vector.
-- `ByteVector4 = 19`, A four-component, 8-bit integer vector.
-- `SingleVector2 = 20`, A two-component, single accuracy floating point vector.
-- `SingleVector3 = 21`, A three-component, single accuracy floating point vector.
-- `SingleVector4 = 22`, A four-component, single accuracy floating point vector.
-- `DoubleVector2 = 23`, A two-component, double accuracy floating point vector.
-- `DoubleVector3 = 24`, A three-component, double accuracy floating point vector.
-- `DoubleVector4 = 25`, A four-component, double accuracy floating point vector.
+- `Array = 2`, A tag containing other tags by index. Items all have the same type.
+- `List = 3`, A tag containing other tags by index. Items may have different types.
+- `SByte = 4`, A signed 8-bit integer.
+- `Byte = 5`, An unsigned 8-bit integer.
+- `Int16 = 6`, A signed 16-bit integer.
+- `UInt16 = 7`, An unsigned 16-bit integer.
+- `Int32 = 8`, A signed 32-bit integer.
+- `UInt32 = 9`, An unsigned 32-bit integer.
+- `Int64 = 10`, A signed 64-bit integer.
+- `UInt64 = 11`, An unsigned 64-bit integer.
+- `Single = 12`, IEEE 754 32-bit floating point (single accuracy).
+- `Double = 13`, IEEE 754 64-bit floating point (double accuracy).
+- `String = 14`, 32-bit length prefixed, UTF-8 encoded string.
+- `Date = 15`, Date and time store, internally stored as UNIX time in milliseconds (Int64).
+- `TimeSpan = 16`, Duration store, internally stored as ticks, which represent 100 nanoseconds each (Int64).
+- `ByteVector2 = 17`, A two-component, 8-bit integer vector, XY.
+- `ByteVector3 = 18`, A three-component, 8-bit integer vector, XYZ.
+- `ByteVector4 = 19`, A four-component, 8-bit integer vector, XYZW.
+- `Int32Vector2 = 20`, A two-component, 32-bit integer vector, XY.
+- `Int32Vector3 = 21`, A three-component, 32-bit integer vector, XYZ.
+- `Int32Vector4 = 22`, A four-component, 32-bit integer vector, XYZW.
+- `SingleVector2 = 23`, A two-component, single accuracy floating point vector, XY.
+- `SingleVector3 = 24`, A three-component, single accuracy floating point vector, XYZ.
+- `SingleVector4 = 25`, A four-component, single accuracy floating point vector, XYZW.
+- `DoubleVector2 = 26`, A two-component, double accuracy floating point vector, XY.
+- `DoubleVector3 = 27`, A three-component, double accuracy floating point vector, XYZ.
+- `DoubleVector4 = 28`, A four-component, double accuracy floating point vector, XYZW.
 
 In most cases, the payload is just what you expect of a binary format. So in case of a four-component
 single accuracy vector, the payload consists of 128 bit data or four `Single`s (without delimeter) in 
@@ -86,6 +89,16 @@ The parser will continue to read name / tag-pairs until it has reached an `End`-
 #### End
 An `End` tag is very simple. It consists just of the tag type (which is 0) without any payload. It's only
 purpose is to mark the end of an `Object`.
+
+#### Array
+An array contains a specified amount of elements. Specifically, `Array`s in ENbt are length- and
+type-prefixed, meaning that the amount and the type of the items inside the list are written as 
+a byte / 32-bit integer before the items themselves are written. The structure of an `Array`
+looks like this:
+
+     Tag Type List  <List Length>  <Items Type>  [    <Payload>    ]
+    |   1 byte    ||   4 bytes   ||    1 byte   |[|    n bytes    |]
+                                                 [ <Length> times> ]
 
 #### List
 A list contains a specified amount of elements. Specifically, `List`s in ENbt are length-prefixed, meaning

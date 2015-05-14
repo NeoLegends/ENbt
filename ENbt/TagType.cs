@@ -12,6 +12,8 @@ namespace ENbt
 
         Object,
 
+        Array,
+
         List,
 
         SByte,
@@ -40,13 +42,17 @@ namespace ENbt
 
         TimeSpan,
 
-        ByteArray,
-
         ByteVector2,
 
         ByteVector3,
 
         ByteVector4,
+
+        Int32Vector2,
+
+        Int32Vector3,
+
+        Int32Vector4,
 
         SingleVector2,
 

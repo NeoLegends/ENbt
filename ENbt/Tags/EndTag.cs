@@ -50,6 +50,6 @@ namespace ENbt
             return this.Equals((Tag)other);
         }
 
-        protected override void WritePayloadTo(ENbtBinaryWriter writer) { }
+        public override void WritePayloadTo(ENbtBinaryWriter writer) { }
     }
 }

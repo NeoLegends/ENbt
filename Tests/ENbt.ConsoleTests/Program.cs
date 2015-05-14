@@ -44,7 +44,7 @@ namespace ENbt.ConsoleTests
         {
             get
             {
-                return (TagType)26;
+                return (TagType)100;
             }
         }
 
@@ -60,7 +60,7 @@ namespace ENbt.ConsoleTests
             return (other is UnknownTypeTag);
         }
 
-        protected override void WritePayloadTo(ENbtBinaryWriter writer)
+        public override void WritePayloadTo(ENbtBinaryWriter writer)
         {
 
         }

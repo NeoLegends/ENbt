@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace ENbt
 {
-    [TagHandlerFor(TagType.List)]
-    public class ListTag : Tag, IEquatable<ListTag>, IList<Tag>
+    [TagHandlerFor(TagType.Array)]
+    public class ArrayTag : Tag, IEquatable<ArrayTag>, IList<Tag>
     {
         private readonly List<Tag> children = new List<Tag>();
+
+        public TagType ChildrenType { get; private set; }
 
         public int Count
         {
@@ -29,12 +31,12 @@ namespace ENbt
         }
 
         public override int PayloadLength
-        { 
+        {
             // Code contracts does not seem to like .Sum. It warns even though there are contracts that prevent the case it is warning about
             [ContractVerification(false)]
             get
             {
-                return sizeof(int) + children.Sum(child => child.Length);
+                return sizeof(int) + sizeof(TagType) + children.Sum(child => child.PayloadLength);
             }
         }
 
@@ -42,7 +44,7 @@ namespace ENbt
         {
             get
             {
-                return TagType.List;
+                return TagType.Array;
             }
         }
 
@@ -54,46 +56,60 @@ namespace ENbt
             }
             set
             {
+                if (value != null && value.Type != this.ChildrenType)
+                {
+                    throw new ArgumentException("Item cannot be set since the children type mismatches.");
+                }
                 this.children[index] = value;
             }
         }
 
-        public ListTag() { }
+        public ArrayTag(TagType childrenType) 
+        {
+            this.ChildrenType = childrenType;
+        }
 
-        public ListTag(ENbtBinaryReader reader)
-            : this()
+        public ArrayTag(ENbtBinaryReader reader)
         {
             Contract.Requires<ArgumentNullException>(reader != null);
 
             int count = reader.ReadInt32();
+            this.ChildrenType = reader.ReadTagType();
             for (int i = 0; i < count; i++)
             {
-                children.Add(Tag.ReadFrom(reader));
+                children.Add(Tag.ReadFrom(reader, this.ChildrenType));
             }
         }
 
-        public ListTag(params Tag[] children)
-            : this((IEnumerable<Tag>)children)
+        public ArrayTag(TagType childrenType, params Tag[] children)
+            : this(children, childrenType)
         {
             Contract.Requires<ArgumentNullException>(children != null);
+            Contract.Requires<ArgumentException>(children.All(child => child.Type == childrenType));
         }
 
-        public ListTag(IEnumerable<Tag> children)
-            : this()
+        public ArrayTag(IEnumerable<Tag> children, TagType childrenType)
         {
             Contract.Requires<ArgumentNullException>(children != null);
+            Contract.Requires<ArgumentException>(children.All(child => child.Type == childrenType));
 
+            this.ChildrenType = childrenType;
             this.children.AddRange(children);
         }
 
         public void Add(Tag item)
         {
+            if (item.Type != this.ChildrenType)
+            {
+                throw new ArgumentException("Item cannot be added, since the child type mismatches.");
+            }
             this.children.Add(item);
         }
 
         public void AddRange(IEnumerable<Tag> items)
         {
             Contract.Requires<ArgumentNullException>(items != null);
+            Contract.Requires<ArgumentException>(items.All(child => child.Type == this.ChildrenType));
 
             this.children.AddRange(items);
         }
@@ -115,15 +131,15 @@ namespace ENbt
 
         public override bool Equals(object obj)
         {
-            return this.Equals(obj as ListTag);
+            return this.Equals(obj as ArrayTag);
         }
 
         public override bool Equals(Tag other)
         {
-            return this.Equals(other as ListTag);
+            return this.Equals(other as ArrayTag);
         }
 
-        public bool Equals(ListTag other)
+        public bool Equals(ArrayTag other)
         {
             if (ReferenceEquals(other, this))
                 return true;
@@ -145,7 +161,7 @@ namespace ENbt
 
         public override int GetHashCode()
         {
-            return Hashing.GetCollectionHash(this.children);
+            return Hashing.GetHashCode(this.ChildrenType, Hashing.GetCollectionHash(this.children));
         }
 
         public int IndexOf(Tag item)
@@ -155,6 +171,11 @@ namespace ENbt
 
         public void Insert(int index, Tag item)
         {
+            if (item.Type != this.ChildrenType)
+            {
+                throw new ArgumentException("Item cannot be added, since the child type mismatches.");
+            }
+
             this.children.Insert(index, item);
         }
 
@@ -162,6 +183,7 @@ namespace ENbt
         {
             Contract.Requires<ArgumentOutOfRangeException>(index >= 0 && index <= this.Count);
             Contract.Requires<ArgumentNullException>(items != null);
+            Contract.Requires<ArgumentException>(items.All(child => child.Type == this.ChildrenType));
 
             this.children.InsertRange(index, items);
         }
@@ -182,9 +204,10 @@ namespace ENbt
             List<Tag> childsToWrite = this.children.Where(child => child != null).ToList();
 
             writer.Write(childsToWrite.Count);
+            writer.Write(this.ChildrenType);
             for (int i = 0; i < childsToWrite.Count; i++)
             {
-                childsToWrite[i].WriteTo(writer);
+                childsToWrite[i].WritePayloadTo(writer);
             }
         }
 
@@ -194,7 +217,7 @@ namespace ENbt
             Contract.Invariant(this.children != null);
         }
 
-        public static bool operator ==(ListTag left, ListTag right)
+        public static bool operator ==(ArrayTag left, ArrayTag right)
         {
             if (ReferenceEquals(left, right))
                 return true;
@@ -204,7 +227,7 @@ namespace ENbt
             return left.Equals(right);
         }
 
-        public static bool operator !=(ListTag left, ListTag right)
+        public static bool operator !=(ArrayTag left, ArrayTag right)
         {
             return !(left == right);
         }

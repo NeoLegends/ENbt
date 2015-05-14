@@ -116,6 +116,14 @@ namespace ENbt
             }
         }
 
+        public ArrayTag AsArray
+        {
+            get
+            {
+                return this.As<ArrayTag>();
+            }
+        }
+
         public ListTag AsList
         {
             get
@@ -137,14 +145,6 @@ namespace ENbt
             get
             {
                 return this.As<TimeSpan>();
-            }
-        }
-
-        public byte[] AsByteArray
-        {
-            get
-            {
-                return this.As<byte[]>();
             }
         }
 
@@ -219,7 +219,7 @@ namespace ENbt
         {
             Contract.Requires<ArgumentNullException>(destination != null);
 
-            using (ENbtBinaryWriter bw = new ENbtBinaryWriter(destination, false))
+            using (ENbtBinaryWriter bw = new ENbtBinaryWriter(destination, true))
             {
                 this.WriteTo(bw);
             }
@@ -241,14 +241,14 @@ namespace ENbt
         /// Writes the payload (all data without the tag type) of the <see cref="Tag"/> to the specified <paramref name="writer"/>.
         /// </summary>
         /// <param name="writer">The <see cref="ENbtBinaryWriter"/> to write the tag to.</param>
-        protected abstract void WritePayloadTo(ENbtBinaryWriter writer);
+        public abstract void WritePayloadTo(ENbtBinaryWriter writer);
 
         public static Tag ReadFrom(Stream source)
         {
             Contract.Requires<ArgumentNullException>(source != null);
             Contract.Requires<InvalidOperationException>(source.CanRead);
 
-            using (ENbtBinaryReader rdr = new ENbtBinaryReader(source, false))
+            using (ENbtBinaryReader rdr = new ENbtBinaryReader(source, true))
             {
                 return ReadFrom(rdr);
             }
@@ -259,6 +259,25 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
 
             return TagResolver.Resolve(reader.ReadTagType())
+                              .Invoke(reader);
+        }
+
+        public static Tag ReadFrom(Stream source, TagType tagType)
+        {
+            Contract.Requires<ArgumentNullException>(source != null);
+            Contract.Requires<InvalidOperationException>(source.CanRead);
+
+            using (ENbtBinaryReader rdr = new ENbtBinaryReader(source, true))
+            {
+                return ReadFrom(rdr, tagType);
+            }
+        }
+
+        public static Tag ReadFrom(ENbtBinaryReader reader, TagType tagType)
+        {
+            Contract.Requires<ArgumentNullException>(reader != null);
+
+            return TagResolver.Resolve(tagType)
                               .Invoke(reader);
         }
 
@@ -277,6 +296,23 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(reader != null);
 
             return (T)ReadFrom(reader);
+        }
+
+        public static T ReadFrom<T>(Stream source, TagType tagType)
+            where T : Tag
+        {
+            Contract.Requires<ArgumentNullException>(source != null);
+            Contract.Requires<InvalidOperationException>(source.CanRead);
+
+            return (T)ReadFrom(source, tagType);
+        }
+
+        public static T ReadFrom<T>(ENbtBinaryReader reader, TagType tagType)
+            where T : Tag
+        {
+            Contract.Requires<ArgumentNullException>(reader != null);
+
+            return (T)ReadFrom(reader, tagType);
         }
 
         public static bool operator ==(Tag left, Tag right)
@@ -323,7 +359,7 @@ namespace ENbt
             return false;
         }
 
-        protected override void WritePayloadTo(ENbtBinaryWriter writer)
+        public override void WritePayloadTo(ENbtBinaryWriter writer)
         {
             Contract.Requires<ArgumentNullException>(writer != null);
         }

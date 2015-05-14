@@ -135,6 +135,7 @@
     <Compile Include="Hashing.cs" />
     <Compile Include="TagHandlerForAttribute.cs" />
     <Compile Include="TagResolver.cs" />
+    <Compile Include="Tags\ArrayTag.cs" />
     <Compile Include="Tags\ByteVectorTag.cs" />
     <Compile Include="Tags\DateTag.cs" />
     <Compile Include="Tags\EndTag.cs" />
@@ -148,9 +149,9 @@
     <Compile Include="Tags\ListTag.cs" />
     <Compile Include="Tags\ObjectTag.cs" />
     <Compile Include="Tags\DoubleVectorTag.cs" />
+    <Compile Include="Tags\Int32VectorTag.cs" />
     <Compile Include="Tags\SingleVectorTag.cs" />
     <Compile Include="Tags\StringTag.cs" />
-    <Compile Include="Tags\ByteArrayTag.cs" />
     <Compile Include="Tags\TimeSpanTag.cs" />
     <Compile Include="TagType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

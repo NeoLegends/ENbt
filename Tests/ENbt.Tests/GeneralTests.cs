@@ -13,6 +13,26 @@ namespace ENbt.Tests
     public class GeneralTests
     {
         [TestMethod]
+        public async Task TestArraySerialization()
+        {
+            ArrayTag array = Helpers.GenerateLongArray();
+
+            using (MemoryStream ms = new MemoryStream())
+            using (FileStream fs = File.Create(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Array.nbt")))
+            {
+                array.WriteTo(ms);
+
+                ms.Position = 0;
+                await ms.CopyToAsync(fs);
+
+                Console.WriteLine("Finished list serialization.");
+
+                ms.Position = 0;
+                Assert.AreEqual(array, Tag.ReadFrom<ArrayTag>(ms));
+            }
+        }
+
+        [TestMethod]
         public async Task TestListSerialization()
         {
             ListTag list = Helpers.GenerateLongList();
