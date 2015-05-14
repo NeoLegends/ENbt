@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace ENbt
 {
-    internal delegate Tag TagInitializationDelegate(ENbtBinaryReader reader);
+    public delegate Tag TagInitializationDelegate(ENbtBinaryReader reader);
 
-    internal static class TagResolver
+    public static class TagResolver
     {
         private static readonly Type[] constructorFinderArray = new[] { typeof(ENbtBinaryReader) };
 
@@ -36,6 +36,13 @@ namespace ENbt
             {
                 referencedAssemblies = Enumerable.Empty<Assembly>();
             }
+        }
+
+        public static bool Register(TagType type, TagInitializationDelegate initializer)
+        {
+            Contract.Requires<ArgumentNullException>(initializer != null);
+
+            return initializers.TryAdd(type, initializer);
         }
 
         public static TagInitializationDelegate Resolve(TagType type)
@@ -86,6 +93,12 @@ namespace ENbt
 
                 return false;
             }
+        }
+
+        public static bool Unregister(TagType type)
+        {
+            TagInitializationDelegate del;
+            return initializers.TryRemove(type, out del);
         }
 
         private static bool TryFindMatchingType(IEnumerable<Type> tagHandlerTypes, out TagInitializationDelegate initializer)
