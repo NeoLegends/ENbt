@@ -73,8 +73,8 @@ namespace ENbt
         {
             Contract.Requires<ArgumentNullException>(reader != null);
 
-            int count = reader.ReadInt32();
             this.ChildrenType = reader.ReadTagType();
+            int count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
             {
                 children.Add(Tag.ReadFrom(reader, this.ChildrenType));
@@ -146,7 +146,7 @@ namespace ENbt
             if (ReferenceEquals(other, null))
                 return false;
 
-            return this.SequenceEqual(other);
+            return (this.ChildrenType == other.ChildrenType) && this.SequenceEqual(other);
         }
 
         public IEnumerator<Tag> GetEnumerator()
@@ -203,8 +203,8 @@ namespace ENbt
         {
             List<Tag> childsToWrite = this.children.Where(child => child != null).ToList();
 
-            writer.Write(childsToWrite.Count);
             writer.Write(this.ChildrenType);
+            writer.Write(childsToWrite.Count);
             for (int i = 0; i < childsToWrite.Count; i++)
             {
                 childsToWrite[i].WritePayloadTo(writer);

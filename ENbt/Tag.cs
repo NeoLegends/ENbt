@@ -248,9 +248,18 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(source != null);
             Contract.Requires<InvalidOperationException>(source.CanRead);
 
+            return ReadFrom(source, TagResolver.Default);
+        }
+
+        public static Tag ReadFrom(Stream source, TagResolver resolver)
+        {
+            Contract.Requires<ArgumentNullException>(source != null);
+            Contract.Requires<InvalidOperationException>(source.CanRead);
+            Contract.Requires<ArgumentNullException>(resolver != null);
+
             using (ENbtBinaryReader rdr = new ENbtBinaryReader(source, true))
             {
-                return ReadFrom(rdr);
+                return ReadFrom(rdr, resolver);
             }
         }
 
@@ -258,8 +267,16 @@ namespace ENbt
         {
             Contract.Requires<ArgumentNullException>(reader != null);
 
-            return TagResolver.Resolve(reader.ReadTagType())
-                              .Invoke(reader);
+            return ReadFrom(reader, TagResolver.Default);
+        }
+
+        public static Tag ReadFrom(ENbtBinaryReader reader, TagResolver resolver)
+        {
+            Contract.Requires<ArgumentNullException>(reader != null);
+            Contract.Requires<ArgumentNullException>(resolver != null);
+
+            return resolver.Resolve(reader.ReadTagType())
+                           .Invoke(reader);
         }
 
         public static Tag ReadFrom(Stream source, TagType tagType)
@@ -267,9 +284,18 @@ namespace ENbt
             Contract.Requires<ArgumentNullException>(source != null);
             Contract.Requires<InvalidOperationException>(source.CanRead);
 
+            return ReadFrom(source, tagType, TagResolver.Default);
+        }
+
+        public static Tag ReadFrom(Stream source, TagType tagType, TagResolver resolver)
+        {
+            Contract.Requires<ArgumentNullException>(source != null);
+            Contract.Requires<InvalidOperationException>(source.CanRead);
+            Contract.Requires<ArgumentNullException>(resolver != null);
+
             using (ENbtBinaryReader rdr = new ENbtBinaryReader(source, true))
             {
-                return ReadFrom(rdr, tagType);
+                return ReadFrom(rdr, tagType, resolver);
             }
         }
 
@@ -277,8 +303,16 @@ namespace ENbt
         {
             Contract.Requires<ArgumentNullException>(reader != null);
 
-            return TagResolver.Resolve(tagType)
-                              .Invoke(reader);
+            return ReadFrom(reader, tagType, TagResolver.Default);
+        }
+
+        public static Tag ReadFrom(ENbtBinaryReader reader, TagType tagType, TagResolver resolver)
+        {
+            Contract.Requires<ArgumentNullException>(reader != null);
+            Contract.Requires<ArgumentNullException>(resolver != null);
+
+            return resolver.Resolve(tagType)
+                           .Invoke(reader);
         }
 
         public static T ReadFrom<T>(Stream source)
@@ -290,12 +324,31 @@ namespace ENbt
             return (T)ReadFrom(source);
         }
 
+        public static T ReadFrom<T>(Stream source, TagResolver resolver)
+            where T : Tag
+        {
+            Contract.Requires<ArgumentNullException>(source != null);
+            Contract.Requires<InvalidOperationException>(source.CanRead);
+            Contract.Requires<ArgumentNullException>(resolver != null);
+
+            return (T)ReadFrom(source, resolver);
+        }
+
         public static T ReadFrom<T>(ENbtBinaryReader reader)
             where T : Tag
         {
             Contract.Requires<ArgumentNullException>(reader != null);
 
             return (T)ReadFrom(reader);
+        }
+
+        public static T ReadFrom<T>(ENbtBinaryReader reader, TagResolver resolver)
+            where T : Tag
+        {
+            Contract.Requires<ArgumentNullException>(reader != null);
+            Contract.Requires<ArgumentNullException>(resolver != null);
+
+            return (T)ReadFrom(reader, resolver);
         }
 
         public static T ReadFrom<T>(Stream source, TagType tagType)
@@ -307,12 +360,31 @@ namespace ENbt
             return (T)ReadFrom(source, tagType);
         }
 
+        public static T ReadFrom<T>(Stream source, TagType tagType, TagResolver resolver)
+            where T : Tag
+        {
+            Contract.Requires<ArgumentNullException>(source != null);
+            Contract.Requires<InvalidOperationException>(source.CanRead);
+            Contract.Requires<ArgumentNullException>(resolver != null);
+
+            return (T)ReadFrom(source, tagType, resolver);
+        }
+
         public static T ReadFrom<T>(ENbtBinaryReader reader, TagType tagType)
             where T : Tag
         {
             Contract.Requires<ArgumentNullException>(reader != null);
 
             return (T)ReadFrom(reader, tagType);
+        }
+
+        public static T ReadFrom<T>(ENbtBinaryReader reader, TagType tagType, TagResolver resolver)
+            where T : Tag
+        {
+            Contract.Requires<ArgumentNullException>(reader != null);
+            Contract.Requires<ArgumentNullException>(resolver != null);
+
+            return (T)ReadFrom(reader, tagType, resolver);
         }
 
         public static bool operator ==(Tag left, Tag right)

@@ -27,7 +27,7 @@ for a single tag.
 
 The type of the tag has a very important role. Since the reader itself does not know what to do with the 
 payload of a tag, it will read the tag and do a lookup for an instance that is capable of handling data of
-that specified type. Since the lookup for the built-in types uses a switch-statement, it is very fast.
+that specified type. Since the lookup for the built-in types uses a `switch`-statement, it is very fast.
 If a handler for the tag type cannot be found, the library will fall back to (more capable, albeit slow)
 reflection. If that lookup failed as well, an exception will be thrown indicating that there was no parser
 for data of the specified type.
@@ -71,8 +71,8 @@ single accuracy vector, the payload consists of 128 bit data or four `Single`s (
 order XYZW.
 
 ### Special Tags
-Special tags are `Object`, `End` and `List`, since they are essential for representing a tree-like data 
-structure like ENbt.
+Special tags are `Object`, `End`, `Array` and `List`, since they are essential for representing a
+tree-like data structure like ENbt.
 
 #### Object
 An `Object` is an ENbt tag that works like a map. It assigns tags to names. It possesses the regular tag 
@@ -83,27 +83,28 @@ followed by the named tag itself. The structure of a tag of type `Object` looks 
     |    1 byte     |[|    1 byte     ||       4 bytes        ||         n bytes         ||  1 byte  || n bytes |]|   1 byte   |
                      [                              as many times as there are children                          ]
 
-The parser will continue to read name / tag-pairs until it has reached an `End`-tag. That marker marks the
- end of an object and is _always_ required.
+The parser will continue to read name / tag-pairs until it has reached an `End`-tag. That marker 
+marks the end of an object and is _always_ required.
 
 #### End
-An `End` tag is very simple. It consists just of the tag type (which is 0) without any payload. It's only
-purpose is to mark the end of an `Object`.
+An `End` tag is very simple. It consists just of the tag type (which is 0) without any payload. 
+It's only purpose is to mark the end of an `Object`.
 
 #### Array
 An array contains a specified amount of elements. Specifically, `Array`s in ENbt are length- and
 type-prefixed, meaning that the amount and the type of the items inside the list are written as 
-a byte / 32-bit integer before the items themselves are written. The structure of an `Array`
-looks like this:
+a byte / 32-bit integer before the items themselves are written. Since the items type is prefixed,
+there is no need to prefix it to every array element and thus the array is more efficient than a
+list, specifically if the items themselves are small. The structure of an `Array` looks like this:
 
-     Tag Type List  <List Length>  <Items Type>  [    <Payload>    ]
-    |   1 byte    ||   4 bytes   ||    1 byte   |[|    n bytes    |]
-                                                 [ <Length> times> ]
+     Tag Type Array <Items Type> <List Length> [    <Payload>    ]
+    |   1 byte     |   1 byte   |   4 bytes   |[|    n bytes    |]
+                                               [ <Length> times> ]
 
 #### List
-A list contains a specified amount of elements. Specifically, `List`s in ENbt are length-prefixed, meaning
-that the amount of items inside the list is written as a 32-bit integer before the items themselves are 
-written. The structure of a `List` looks like this:
+A list contains a specified amount of elements. Specifically, `List`s in ENbt are length-prefixed,
+meaning that the amount of items inside the list is written as a 32-bit integer before the items 
+themselves are written. The structure of a `List` looks like this:
 
      Tag Type List  <List Length> [ <Tag Type>  <Payload> ]
     |   1 byte    ||   4 bytes   |[|  1 byte  || n bytes |]
@@ -113,7 +114,7 @@ written. The structure of a `List` looks like this:
 1. In contrast to Minecraft NBT, ENbt (to which it is not binary-compatible) does not store the name
    within a tag. Instead, names of the items will be stored by the parent which contains the Tag.
    This simplifies the structure of the document tree, as there is no more decision to make in whether
-   a Tag's name shall be written out or not. Objects simply write the name of the child to the output,
+   a Tags name shall be written out or not. Objects simply write the name of the child to the output,
    lists don't. It also allows for greater flexibility, since you can associate the same value to 
    different keys without mutating the value itself.
 2. ENbt does not require the tree root to be an object. You can use lists, objects, integers, floating 
