@@ -5,7 +5,8 @@ A structured binary format loosely based on Minecraft's NBT.
 Using ENbt is simple. New tags can be created by `new`ing them, tags can be saved by calling `WriteTo`.
 Loading tags from `Stream`s is possible via `Tag.ReadFrom<T>`. There is no support for `async / await`
 since `BinaryReader / -Writer` does not include support for it as well. The same reasons why they don't 
-supply support also apply for ENbt (lots of small operations -> bad for `async / await`). I suggest 
+supply support also apply for ENbt (lots of small operations -> bad for `async / await`). Since most of
+the work required to write a tag to a stream is setting some bytes and UTF-8-encoding strings, I suggest 
 writing to a temporary `MemoryStream` which you copy to your actual `Stream` via `CopyToAsync`, if you
 wanna stay async.
 
